@@ -3,4 +3,4 @@
 
 ## Script - cleanFasta
 ## Usage:
-python3 cleanFasta <input file>
+python3 cleanFasta INPUT_FILE
