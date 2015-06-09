@@ -5,6 +5,7 @@
 ## Usage: python3 cleanFasta ENTER_FASTA_FILE
 
 ## Desc: Cleans the FASTA file header, trunchates the header till first whitespace and pipe
+## 	and removes whitelines.
 
 
 import re, sys
@@ -16,7 +17,7 @@ import re, sys
 def FASTAClean(filename):
     fh_in=open(filename, 'r')
     #write file
-    out_file = ('%s_Clean.fa' % (filename.split('.')[0]))
+    out_file = ('%s_clean.fa' % (filename.split('.')[0]))
     fh_out =open(out_file, 'w')
     
     print ('\nCleaning "%s" FASTA file\n' % (filename))
