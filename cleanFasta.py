@@ -2,7 +2,7 @@
 
 ## Author: kakrana@udel.edu
 ## Version: 1.1
-##Usage: python3 cleanFasta ENTER_FASTA_FILE
+## Usage: python3 cleanFasta ENTER_FASTA_FILE
 
 ## Desc: Cleans the FASTA file header, trunchates the header till first whitespace and pipe
 
