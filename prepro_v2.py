@@ -20,8 +20,8 @@ import matplotlib.font_manager as font_manager
 ## PRE-PROCESSING SETTINGS ####################
 
 ## ROCKET ####################################
-genoFile = '/data1/homes/kakrana/gmap_db/AGPv3/Zea_mays.AGPv3.27.dna_sm.allchr.fa'
-genoIndex = './index_bt1/Zea_mays.AGPv3.27'               ## If index is not in $ALLDATA i.e. local analysis, then specify bowtie1 index here for pre-processing. For Seq-analysis a Bowtie2 index  will be made using 'indexBuilderStep'
+#genoFile = '/data1/homes/kakrana/gmap_db/AGPv3/Zea_mays.AGPv3.27.dna_sm.allchr.fa'
+#genoIndex = './index_bt1/Zea_mays.AGPv3.27'               ## If index is not in $ALLDATA i.e. local analysis, then specify bowtie1 index here for pre-processing. For Seq-analysis a Bowtie2 index  will be made using 'indexBuilderStep'
 
 #seqType = 0                             ## [mandatory] 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)
 
