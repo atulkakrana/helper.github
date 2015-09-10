@@ -18,22 +18,12 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 
 ## PRE-PROCESSING SETTINGS ####################
-Local = 1                               ## 1: Local 0: Remote | NOTE: Local Analysis: Requires - maxLen,minLen,maxReadLen and adpaters.fa and libraries
-genomeDB = 'GRAPE_IGGP12Xv1_genome'     ## [Server mode]For Bowtie index path used for mapping for graphs
+
 ## ROCKET ####################################
 genoFile = '/data1/homes/kakrana/gmap_db/AGPv3/Zea_mays.AGPv3.27.dna_sm.allchr.fa'
-gtfFile = './gtf/Maize0.8-5kb_IsoSeq_Allcells-polished_high_qv.collapsed.AGPv3.27.gtf' 
 genoIndex = './index_bt1/Zea_mays.AGPv3.27'               ## If index is not in $ALLDATA i.e. local analysis, then specify bowtie1 index here for pre-processing. For Seq-analysis a Bowtie2 index  will be made using 'indexBuilderStep'
-sampleInfo = "vegSampleInfo.txt"        ## [mandatory] Tab delimted file with three mandatory columns - num (sample numbers), id (filename,library id), rep (same number if replicates)
-                                        ## And one optional columns group (sample grouped for edgeR analysis). See end of code for format.
 
-
-referenceGTF = 'T'                      ## [optional] T: True - use reference gtf file for merging assembling and annotation | F: Do not use GTF file and report transcripts based on transcriptome
-                                        ## http://plants.ensembl.org/info/website/ftp/index.html OR USE gffread my.gff3 -T -o my.gtf (GFFREAD IS PART OF CUFFLINKS/TUXEDO)
-libType = 0                             ## [mandatory] From cuffNorm manual 1) 0 = fr-unstranded 2) 1 = fr-firststrand 3) 2 = fr-secondstrand
 seqType = 0                             ## [mandatory] 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)
-
-groupBy = 'R'                           ## [mandatory]   R: Group Samples by replicates, G: By user specified groups in sampleInfo 'group' column
 
 
 ## PRE_PROCESSING - OPTIONAL STEPS [Value: 0/1] ###############
@@ -428,38 +418,14 @@ def main(sampleInfo):
     libs,rep = sampleInfoRead(sampleInfo)
     print('\n\n**Total %s libraries provided for pre-processing**\n' % (len(libs)))
     
-    if Local == 1: ## Local analysis
-            for i in libs:
-                ext = 'fastq'
-                minTagLen = minLen
-                maxTagLen = maxLen
-                filePath = './%s.%s' % (i,ext)
-                register.append((str(i),ext,str(nthread),str(filePath),None,adapterFile,minTagLen,maxTagLen)) ## file ID, ext, nthread, raw file path,None (added to maintain same structure as remote analysis register),
-                                                                                                            ## adapter file, min tag len, max tag len
+    for i in libs:
+        ext = 'fastq'
+        minTagLen = minLen
+        maxTagLen = maxLen
+        filePath = './%s.%s' % (i,ext)
+        register.append((str(i),ext,str(nthread),str(filePath),None,adapterFile,minTagLen,maxTagLen)) ## file ID, ext, nthread, raw file path,None (added to maintain same structure as remote analysis register),
+                                                                                                    ## adapter file, min tag len, max tag len
 
-    elif Local == 0: ## Remote analysis
-        global con
-        con = ConnectToDB(dataServer,0)
-        for i in libs:
-            cur = con.cursor()
-            cur.execute("SELECT raw_path,raw_file_format,adapter_5p,adapter_3p,minimum_tag_length,maximum_tag_length FROM master.library_info WHERE lib_id like '%s'" % (i)) ##bowtie_index_path
-            fileInfo = cur.fetchall()
-            print ('Library:', (fileInfo[0]))
-            
-            filePath = fileInfo[0][0].replace('$ALLDATA', '/alldata') 
-            ext = fileInfo[0][1]
-            adp_5p = fileInfo[0][2]
-            adp_3p = fileInfo[0][3]
-            if hardMinTagLen == 'Y':
-                minTagLen = userMinTagLen
-                maxTagLen = userMaxTagLen
-            else:
-                minTagLen = fileInfo[0][4]
-                maxTagLen = fileInfo[0][5]
-            register.append((str(i),ext,str(nthread),str(filePath),adp_5p,adp_3p,minTagLen,maxTagLen)) ## Lib, ext, nthread, raw file path, adapter 5p, adapter 3p, min tag len, max tag len
-
-    else:
-        print("Please choose correct value for Local variable: Local = [0/1]")
     
     #####################################################################################
     #### 1. QC Raw files ################################################################
