@@ -1,24 +1,38 @@
 <Settings file for preprocessing script>
 
-@genomeDB = "AT_TAIR10_genome" <Genome DB for libraries>
-@libs = 4265,4267 <Library IDs>
+@libs = 4265.chopped.trimmed.fastq <Library IDs>
+
+
+<Optional Steps, value in string>
+@genoFile=   <Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
 
 <Optional Steps, value in boolean>
-
 @QCheckStep = 1 <Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
 @preProGraphsStep = 0 <Default: 0 Generates before-chopping graphs>
 
 
 <Required Steps, value in boolean>
 
+@seqType = 0 < 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
 @trimLibsStep = 0 <Trim FASTQ file>
 @chopLibsStep = 0 <Chop file>
+@adapterSelection = 0 < Default: 0 uses Trimmomatic files, 1 user provided FASTA file "adapter.fa">
+@adapterFile= "adapter.fa" < Only used if the adapterSelection is set to 1>
 @fastQ2CountStep = 0 <Converts chopped to tag count>
-@mapperStep = 1 <Maps final chopped files and generates graphs>
+@mapperStep = 0 < Default: 0, 1 Maps final chopped files and generates graphs and used only if genoFile is provided by user. >
 @summaryFileStep = 1 <Prepares a summary file for the library>
 @cleanupStep = 0 <Final cleanup>
+@maxLen = 80 <Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping >
+@minLen = 35 <Min length of tag allowed>
+@unpairDel = 1 <[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
+
+
+
+
+
+
 
 <END>
 <Script for pre-processing the RAW fastQ file>
 <v.08>
-<Author: kakrana@gmail.com>
+<Author: kakrana@gmail.com> <Modified by: pupatel@udel.edu on 09/10/2015>

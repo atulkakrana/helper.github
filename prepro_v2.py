@@ -23,24 +23,22 @@ import matplotlib.font_manager as font_manager
 genoFile = '/data1/homes/kakrana/gmap_db/AGPv3/Zea_mays.AGPv3.27.dna_sm.allchr.fa'
 genoIndex = './index_bt1/Zea_mays.AGPv3.27'               ## If index is not in $ALLDATA i.e. local analysis, then specify bowtie1 index here for pre-processing. For Seq-analysis a Bowtie2 index  will be made using 'indexBuilderStep'
 
-seqType = 0                             ## [mandatory] 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)
+#seqType = 0                             ## [mandatory] 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)
 
 
 ## PRE_PROCESSING - OPTIONAL STEPS [Value: 0/1] ###############
-QCheckStep = 1                          ## Optional -Performs preliminary QC
+#QCheckStep = 1                          ## Optional -Performs preliminary QC
 
 ## PRE_PROCESSING - REQUIRED STEPS [Value: 0/1] ##############
-trimLibsStep = 1                        ## Trim fastq files
-preProGraphsStep = 0                    ## Generates before chopping graphs
-chopLibsStep = 1                        ## Chops adapter trimmed files
-fastQ2CountStep = 1                     ## Converts chopped to tag count
-mapperStep = 1                          ## Maps final chopped files and generates graphs
-cleanupStep = 0                         ## Final cleanup
+#trimLibsStep = 1                        ## Trim fastq files
+#preProGraphsStep = 0                    ## Generates before chopping graphs
+#chopLibsStep = 1                        ## Chops adapter trimmed files
+#fastQ2CountStep = 1                     ## Converts chopped to tag count
+#mapperStep = 1                          ## Maps final chopped files and generates graphs
+#cleanupStep = 0                         ## Final cleanup
 
 ## ADVANCED SETTINGS #######################
-maxLen = 80                             ## [mandatory] Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping
-minLen = 35                             ## [mandatory] Min length of tag allowed
-unpairDel = 1                           ## [Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files
+
 
 numProc = 0                             ## [developer]  Coarse grain PP [0: Mazimize parallel processing | [1-64]: Number of Cores]
 nthread = 10                            ## [developer]  Fine grain PP
@@ -48,13 +46,13 @@ maxReadLen = 1000                       ## [developer]  Max allowed unchopped re
 
 
 ## TOOL/FILE PATH ###################################
-adapterFile = '/data1/homes/kakrana/tools/Trimmomatic-0.32/adapters/TruSeq-SE.fa'      ## [mandatory] Sequence adapter file in FASTA format - Trimmomatic has files for different kits - Copy from there
+#adapterFile = '/data1/homes/kakrana/tools/Trimmomatic-0.32/adapters/TruSeq-SE.fa'      ## [mandatory] Sequence adapter file in FASTA format - Trimmomatic has files for different kits - Copy from there
 
 
 ## FUNCTIONS ##################################
 
 ## Output Global settings
-def readSet(setFile):
+def readSet():
     print ("\n######## User Settings #############")
     
     fh_in = open("prepro.set", 'r')
@@ -65,67 +63,116 @@ def readSet(setFile):
             if line.startswith('@'):
                 line = line.strip().split('<')
                 param,value = line[0].split('=')
-                print(param,value)
+                # print(param,value)
                 
-                ##Extract values
-                
-                if param.strip() == '@genomeDB':
-                    global genomeDB
-                    genomeDB = value.replace('"','').strip()
-                    #print("User input Genome: ",genomeDB)
-                
-                elif param.strip() == '@libs':
+                ##Extract values               
+            
+                if param.strip() == '@libs':
                     global libs
-                    libs = list(map(int,value.strip().split(',')))
+                    libs = list(map(str,value.strip().split(',')))
                     print('User Input Libs:',libs)
+
+                elif param.strip() == '@genoFile':
+                    global genoFile
+                    genoFile = str(value.strip())
+                    print('User Input genoFile:',genoFile)
                 
                 elif param.strip() == '@QCheckStep':
                     global QCheckStep
                     QCheckStep = int(value.strip())
-                    #print('User Input QCheckStep:',QCheckStep)
+                    print('User Input QCheckStep:',QCheckStep)
                 
                 elif param.strip() == '@preProGraphsStep':
                     global preProGraphsStep
                     preProGraphsStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',preProGraphsStep)
+                    print('User Input preProGraphsStep:',preProGraphsStep)
                 
                 elif param.strip() == '@trimLibsStep':
                     global trimLibsStep
                     trimLibsStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',trimLibsStep)
+                    print('User Input trimLibsStep:',trimLibsStep)
                 
                 elif param.strip() == '@chopLibsStep':
                     global chopLibsStep
                     chopLibsStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',chopLibsStep)
+                    print('User Input chopLibsStep:',chopLibsStep)
                 
                 elif param.strip() == '@fastQ2CountStep':
                     global fastQ2CountStep
                     fastQ2CountStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',fastQ2CountStep)
+                    print('User Input fastQ2CountStep:',fastQ2CountStep)
                 
                 elif param.strip() == '@mapperStep':
                     global mapperStep
                     mapperStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',mapperStep)
+                    print('User Input mapperStep:',mapperStep)
 
                 elif param.strip() == '@summaryFileStep':
                     global summaryFileStep
                     summaryFileStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',mapperStep)
+                    print('User Input summaryFileStep:',summaryFileStep)
                 
                 elif param.strip() == '@cleanupStep':
                     global cleanupStep
                     cleanupStep = int(value.strip())
-                    #print('User Input preProGraphsStep:',cleanupStep)
-                
+                    print('User Input cleanupStep:',cleanupStep)
+
+                elif param.strip() == '@seqType':
+                    global seqType
+                    seqType = int(value.strip())
+                    print('User Input seqType:',seqType)
+
+                elif param.strip() == '@maxLen':
+                    global maxLen
+                    maxLen = int(value.strip())
+                    print('User Input maxLen:',maxLen)
+
+                elif param.strip() == '@minLen':
+                    global minLen
+                    minLen = int(value.strip())
+                    print('User Input minLen:',minLen)
+
+                elif param.strip() == '@unpairDel':
+                    global unpairDel
+                    unpairDel = int(value.strip())
+                    print('User Input unpairDel:',unpairDel)
+
+                elif param.strip() == '@adapterSelection':
+                    global adapterSelection
+                    adapterSelection = int(value.strip())
+                    print('User Input adapterSelection:',adapterSelection)  
+
+                elif param.strip() == '@adapterFile':
+                    global adapterFile
+                    TempaadapterFile = str(value.strip())
+                    print('User Input adapterFile:',TempaadapterFile)              
                 
             else:
                 #print("Missed line:",line)
                 pass
+
+
+    if adapterSelection == 1:
+        adapterFile=TempaadapterFile
+    else:
+        if seqType == 0: #single end data
+            adapterFile= "./TruSeq-SE.fa" #use single end Trimmomatic adapter File
+        else:
+            adapterFile= "./TruSeq-PE.fa" #use paired end Trimmomatic adapter File
+
+    if len(genoFile) !=0 and mapperStep==0:
+        print (genoFile)
+        print ("Error:  You provided genome file. Set mapperStep to 1. Please Read the mapperStep in settings file")
+        sys.exit()
+    elif len(genoFile)==0 and mapperStep==1 :
+        print ("Error:  You have not provided genome file. Either set mapperStep to 0 or provide genome file.")
+        sys.exit()
+    else:
+        pass
+
     print('####################################')
     
-    return genomeDB,libs
+    return libs
 
 ## Output: "libName_fastqc" folder
 def QCheck(aninput):
@@ -279,15 +326,7 @@ def mapper(rawInputs,mode):
         lib,ext,nthread,maxTagLen = aninput
         
         # Resolve index path #################################
-        if Local == 0:
-            cur = con.cursor()
-            cur.execute("SELECT bowtie_index_path FROM master.genome_db WHERE genome_db like '%s'" % (genomeDB)) ##bowtie_index_path
-            genoIndexPath = cur.fetchall()
-            
-            genoIndexPrePro = genoIndexPath[0][0].replace('$ALLDATA', '/alldata') ### Index file
-
-        else:
-            genoIndexPrePro = genoIndex
+        genoIndexPrePro = genoIndex
 
         print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
         #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
@@ -408,14 +447,13 @@ def PPBalance(module,alist):
     npool.map(module, alist)
 
 ############## MAIN ###########################
-def main(sampleInfo):
+def main(libs):
     
     start = time.time() 
     runLog = open('%s_run.log' % (datetime.datetime.now().strftime("%m_%d_%H_%M")), 'w')
-    
+        
     #### 0. Initialize Input Register ###################################################
     register =[] ## Holds values for all different steps - master feeder
-    libs,rep = sampleInfoRead(sampleInfo)
     print('\n\n**Total %s libraries provided for pre-processing**\n' % (len(libs)))
     
     for i in libs:
@@ -557,8 +595,8 @@ if __name__ == '__main__':
         nproc = int(numProc)
     
     #### Execute modules
-
-    main(sampleInfo)
+    libs=readSet()
+    main(libs)
     print("\n\n-------Script finished sucessfully - CHEERS!!!! - You owe a beer !_! to Atul--------\n")
     
     sys.exit()
