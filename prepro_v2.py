@@ -180,7 +180,8 @@ def QCheck(aninput):
     print(aninput)
     lib,nthread,infile = aninput
     print('\n****Checking quality of %s library****' % (lib))    
-    toolPath = "%s/svn/Tools/FastQC/fastqc" % (os.getenv('HOME'))
+    # toolPath = "%s/svn/Tools/FastQC/fastqc" % (os.getenv('HOME'))
+    toolPath = "fastqc"
     retcode2 = subprocess.call([toolPath,infile,"--outdir=./"])
 
     return None
