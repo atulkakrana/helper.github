@@ -76,6 +76,11 @@ def readSet():
                     global genoFile
                     genoFile = str(value.strip())
                     print('User Input genoFile:',genoFile)
+
+                elif param.strip() == '@Trimmomatic_PATH':
+                    global Trimmomatic_PATH
+                    Trimmomatic_PATH = str(value.strip())
+                    print('User Input Trimmomatic_PATH:',Trimmomatic_PATH)
                 
                 elif param.strip() == '@QCheckStep':
                     global QCheckStep
@@ -156,9 +161,9 @@ def readSet():
         adapterFile=TempaadapterFile
     else:
         if seqType == 0: #single end data
-            adapterFile= "./TruSeq-SE.fa" #use single end Trimmomatic adapter File
+            adapterFile= "TruSeq-SE.fa" #use single end Trimmomatic adapter File
         else:
-            adapterFile= "./TruSeq-PE.fa" #use paired end Trimmomatic adapter File
+            adapterFile= "TruSeq-PE.fa" #use paired end Trimmomatic adapter File
 
     if len(genoFile) !=0 and mapperStep==0:
         print (genoFile)
@@ -192,71 +197,40 @@ def trimLibs(aninput):
     lib,ext,nthread,infile,adp_5p,adp_3p,minTagLen = aninput
     print('\n****Trimming %s library with min length %s****' % (lib,minTagLen))
     
-    #### LOCAL ##########################
-    if Local == 1: 
-        adapterFile = adp_3p ## For local analysis adp_3p is actually the adapterfile - see main
-        toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
 
-        ## Single End ###################
-        if seqType == 0:
-            trimmedFile = '%s.trimmed.%s' % (lib,ext) ## Output
-            retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
-            
-            if retcode == 0:## The bowtie mapping exit with status 0, all is well
-                    print('\n****Trimming for %s complete****' % (infile) )
-            
-            else:
-                print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
-                sys.exit()
+    adapterFile = adp_3p ## For local analysis adp_3p is actually the adapterfile - see main
+    #toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
+    toolPath = Trimmomatic_PATH
 
-        ## Paired End ##################
-        elif seqType == 1: 
-            trimmedFileP1 = '%s.pair_1.trimmed.%s' % (lib,ext) ## Output
-            trimmedFileP2 = '%s.pair_2.trimmed.%s' % (lib,ext) ## Output
-            trimmedFileU1 = '%s.unpair_1.trimmed.%s' % (lib,ext) ## Output
-            trimmedFileU2 = '%s.unpair_2.trimmed.%s' % (lib,ext) ## Output
-
-            infile1 = "%s_1.%s" % (lib,ext)
-            infile2 = "%s_2.%s" % (lib,ext)
-            retcode = subprocess.call(["java", "-jar", toolPath, "PE", "-phred33", "-threads", nthread, infile1, infile2, trimmedFileP1,trimmedFileU1,trimmedFileP2,trimmedFileU2, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
-            if retcode == 0:## The bowtie mapping exit with status 0, all is well
-                    print('\n****Trimming for %s complete****' % (infile) )
-            
-            else:
-                print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
-                sys.exit()
-
-
-    ## SERVER BASED ##########################
-    elif Local == 0:
-        adapter = open('%s_adapter.fa' % (lib), 'w')
-        adapter.write('>adapter_5p\n%s\n>adapter_3p\n%s' % (adp_5p,adp_3p))
-        adapter.close()
+    ## Single End ###################
+    if seqType == 0:
+        trimmedFile = '%s.trimmed.%s' % (lib,ext) ## Output
+        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
+        print (["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
+        if retcode == 0:## The bowtie mapping exit with status 0, all is well
+                print('\n****Trimming for %s complete****' % (infile) )
         
-        ## Just Trim
-        #trimlog = '%s.trim.log' % (lib)
-
-        ## Single End ##############
-        if seqType == 0:
-            trimmedFile = '%s.trimmed.%s' % (lib,ext) ## Output
-            toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
-            retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:./%s_adapter.fa:2:30:10" % (lib), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
-            if retcode == 0:## The bowtie mapping exit with status 0, all is well
-                    print('\n****Trimming for %s complete****' % (infile) )
-            
-            else:
-                print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
-                sys.exit()
-
-        ### Paired End ##############
         else:
-            print("Paired end for server based analysis is not developed yet")
-            print("System will exit")
+            print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
             sys.exit()
-    
-    ## Incorrect mode selected       
-    else:
-        print("Please choose correct value for Local variable: Local = [0/1]")
+
+    ## Paired End ##################
+    elif seqType == 1: 
+        trimmedFileP1 = '%s.pair_1.trimmed.%s' % (lib,ext) ## Output
+        trimmedFileP2 = '%s.pair_2.trimmed.%s' % (lib,ext) ## Output
+        trimmedFileU1 = '%s.unpair_1.trimmed.%s' % (lib,ext) ## Output
+        trimmedFileU2 = '%s.unpair_2.trimmed.%s' % (lib,ext) ## Output
+
+        infile1 = "%s_1.%s" % (lib,ext)
+        infile2 = "%s_2.%s" % (lib,ext)
+        retcode = subprocess.call(["java", "-jar", toolPath, "PE", "-phred33", "-threads", nthread, infile1, infile2, trimmedFileP1,trimmedFileU1,trimmedFileP2,trimmedFileU2, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
+        if retcode == 0:## The bowtie mapping exit with status 0, all is well
+                print('\n****Trimming for %s complete****' % (infile) )
+        
+        else:
+            print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
+            sys.exit()
+
 
     ## CLEANUP ##
     if unpairDel == 1:
@@ -287,7 +261,8 @@ def chopLibs(aninput):
     trimmedInFile = '%s.%s' % (lib,ext)
     choppedOutFile = '%s.chopped.%s' % (lib,ext)
     print("\n")
-    toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
+    #toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
+    toolPath = Trimmomatic_PATH
     
     if seqType == 0:
         retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, trimmedInFile, choppedOutFile, "CROP:%s" % (maxTagLen)])
@@ -492,6 +467,7 @@ def main(libs):
         # for i in rawInputs:
         #    trimLibs(i)
         PPBalance(trimLibs,rawInputs)
+        #print (rawInputs)
     else:
         print('\n**Trimming of the libraries will be skipped as selected**\n')
         pass
@@ -520,12 +496,7 @@ def main(libs):
         print('\n**Mapping to generate pre-chopping quality graphs graphs**\n')
             # maps = mapper(rawInputs,1)
         
-        if Local == 0:
-            # con = ConnectToDB(dataServer,0)
-            maps = mapper(rawInputs,1)
-        else:
-            # con = ConnectToDB(dataServer,0)
-            maps = mapper(rawInputs,1)
+        maps = mapper(rawInputs,1)
 
         
         ### Delete tag count, fasta files and map files to make way for real processed files
