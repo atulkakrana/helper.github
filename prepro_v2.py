@@ -422,6 +422,182 @@ def PPBalance(module,alist):
     npool = Pool(int(nprocPP))
     npool.map(module, alist)
 
+def charts(lib,mappedList,mappedAbunList,allTagsList,allAbunList,mode):
+    
+    ### Graphs of pre-processed files i.e trimmed files
+    if mode == 1:
+        
+        print ("\n**Generating graphs for trimmed files**\n")
+        ## Get all the tag sizes from disticnt tags list
+        #print('alltagsList:', allTagsList)
+        indexList = [i for i,x in enumerate(allTagsList) if x != 0]
+        #print ('indexList:',indexList)
+        minLen = min(indexList)
+        maxLen = max(indexList)
+        
+        #### CHART-1: Distinct mapped vs distinct all
+        plotFile = ('%s_distinct_dist_before_chop.png' % (lib))##Plot results file
+        
+        #bottomList = [i for i in mappedList if i > 0]
+        #upList = [i for i in allTagsList if i > 0]
+        bottomList = list(mappedList[minLen:maxLen+1])
+        upList = list(allTagsList[minLen:maxLen+1]) ## Abundance of different sizes
+        upList2 = [a - b for a, b in zip(upList, bottomList)] ## Abundance substracted from bottom List - to plot the remainder on top
+        
+        maxAbun = max(upList)
+        #print (len(bottomList),len(upList),maxAbun)
+        ybreak = 500000
+        
+        ## Different sizes to be plotted
+        N = int(maxLen) - int(minLen) +1
+        ind=np.arange(N)
+        #print('np.arange',ind)
+        width = 0.5
+        
+        ##plotting variables
+        p1 = plt.bar(ind, bottomList, width, color = 'g',)
+        p2 = plt.bar(ind, upList2, width, color = 'b', bottom=bottomList)
+        
+        plt.ylabel('Count of distinct tags mapped to genome (before chopping)', fontproperties=font_manager.FontProperties(size=8))
+        plt.xlabel('Tag Length', fontproperties=font_manager.FontProperties(size=8))
+        plt.title('Distinct tags in %s library matched to %s before pre-processing' % (lib,genomeDB),fontproperties=font_manager.FontProperties(size=9))
+        plt.xticks(np.arange(N),    np.arange(int(minLen),int(maxLen)+1),   rotation = 45,  fontproperties=font_manager.FontProperties(size=9))
+        plt.yticks(np.arange(0,maxAbun+ybreak,ybreak),  fontproperties=font_manager.FontProperties(size=6))
+        ax = plt.gca()
+        ax.yaxis.grid(True)
+        plt.legend((p1[0], p2[0]), ('Mapped reads','Total Reads'), loc=2, prop=font_manager.FontProperties(size=6))
+        
+        plt.savefig(plotFile, format=None , facecolor='w', edgecolor='w', orientation='portrait', papertype=None,  transparent=False, bbox_inches=None, pad_inches=0)
+        plt.clf() ## Clear figure so that next plot is different file
+        
+        
+        
+        ### CHART 2:  Mapped abundance vs total abundance ######
+        plotFile2 = ('%s_abund_dist_before_chop.png' % (lib))##Plot results file
+        #bottomListAll = [i for i in mappedAbunList if i > 0]
+        #upListAll = [i for i in allAbunList if i > 0]
+        bottomListAll = list(mappedAbunList[minLen:maxLen+1])
+        upListAll = list(allAbunList[minLen:maxLen+1])
+        upListAll2 = [a - b for a, b in zip(upListAll, bottomListAll)] ## Abundance substracted from bottom List - to plot the remainder on top
+        
+        maxAbun2 = max(upListAll)
+        #print (upListAll,maxAbun2)
+        ybreak2 = 1500000
+        
+        ## Different sizes to be plotted
+        N = int(maxLen) - int(minLen) +1
+        #ind=np.arange(N)
+        width = 0.5
+        
+        ##plotting variables
+        p1 = plt.bar(ind, bottomListAll, width, color = 'm',)
+        p2 = plt.bar(ind, upListAll2, width, color = 'c', bottom=bottomListAll)
+        
+        plt.ylabel('Total tags', fontproperties=font_manager.FontProperties(size=8))
+        plt.xlabel('Tag Length', fontproperties=font_manager.FontProperties(size=8))
+        plt.title('Total tags in %s library matched to %s (before chopping)' % (lib,genomeDB),fontproperties=font_manager.FontProperties(size=9))
+        plt.xticks(np.arange(N), np.arange(int(minLen),int(maxLen)+1),  rotation = 45,  fontproperties=font_manager.FontProperties(size=9) )
+        plt.yticks(np.arange(0,maxAbun2+ybreak2,ybreak2),   fontproperties=font_manager.FontProperties(size=6))
+        ax = plt.gca()
+        ax.yaxis.grid(True)
+        plt.legend((p1[0], p2[0]), ('Mapped reads','Total Reads'), loc=2, prop=font_manager.FontProperties(size=6))
+        
+        ##Turns off the x-axis digits to exponent
+        fmt= matplotlib.ticker.ScalarFormatter(useOffset=False) 
+        fmt.set_scientific(False)
+        ax.yaxis.set_major_formatter(fmt)
+    
+        plt.savefig(plotFile2, format=None , facecolor='w', edgecolor='w', orientation='portrait', papertype=None,  transparent=False, bbox_inches=None, pad_inches=0)
+        plt.clf() ## Clear figure so that next plot is different file
+    
+    ### Graphs of processed files
+    elif mode == 2: ## Graph of final processed reads:
+        
+        print ("\n**Generating graphs for final processed files**\n")
+        
+        indexList = [i for i,x in enumerate(allTagsList) if x != 0]
+        #print ('indexList:',indexList)
+        minLen = min(indexList)
+        maxLen = max(indexList)
+        
+        #### CHART-1: Distinct mapped vs distinct all
+        plotFile = ('%s_distinct_dist_after_chop.png' % (lib))##Plot results file
+        
+        bottomList = list(mappedList[minLen:maxLen+1])
+        upList = list(allTagsList[minLen:maxLen+1]) ## Abundance of different sizes
+        upList2 = [a - b for a, b in zip(upList, bottomList)] ## Abundance substracted from bottom List - to plot the remainder on top
+        
+        
+        maxAbun = max(upList)
+        #print (upList,maxAbun)
+        ybreak = 500000
+        
+        ## Different sizes to be plotted
+        N = int(maxLen) - int(minLen) +1 
+        ind=np.arange(N)
+        #print('np.arange',ind)
+        width = 0.5
+        
+        ##plotting variables
+        p1 = plt.bar(ind, bottomList, width, color = 'g',)
+        p2 = plt.bar(ind, upList2, width, color = 'b', bottom=bottomList)  
+        
+        plt.ylabel('Count of distinct tags mapped to genome', fontproperties=font_manager.FontProperties(size=8))
+        plt.xlabel('Tag Length', fontproperties=font_manager.FontProperties(size=8))
+        plt.title('Distinct tags in %s library matched to %s after processing' % (lib,genomeDB),fontproperties=font_manager.FontProperties(size=9))
+        plt.xticks(np.arange(N),    np.arange(int(minLen),int(maxLen)+1),   rotation = 45,  fontproperties=font_manager.FontProperties(size=9))
+        plt.yticks(np.arange(0,maxAbun+ybreak,ybreak),  fontproperties=font_manager.FontProperties(size=6))
+        ax = plt.gca()
+        ax.yaxis.grid(True)
+        plt.legend((p1[0], p2[0]), ('Mapped reads','Total Reads'), loc=2, prop=font_manager.FontProperties(size=6))
+        
+        plt.savefig(plotFile, format=None , facecolor='w', edgecolor='w', orientation='portrait', papertype=None,  transparent=False, bbox_inches=None, pad_inches=0)
+        plt.clf() ## Clear figure so that next plot is different file
+        
+        
+        ### Chart 2:  All genomic reads
+        plotFile2 = ('%s_abund_dist_after_chop.png' % (lib))##Plot results file
+        bottomListAll = list(mappedAbunList[minLen:maxLen+1])
+        upListAll = list(allAbunList[minLen:maxLen+1])
+        upListAll2 = [a - b for a, b in zip(upListAll, bottomListAll)] ## Abundance substracted from bottom List - to plot the remainder on top
+        
+        maxAbun2 = max(upListAll)
+        #print (upListAll,maxAbun2)
+        ybreak2 = 1500000
+        
+        ## Different sizes to be plotted
+        N = int(maxLen) - int(minLen) +1 
+        ind=np.arange(N)
+        width = 0.5
+        
+        ##plotting variables
+        p1 = plt.bar(ind, bottomListAll, width, color = 'm',)
+        p2 = plt.bar(ind, upListAll2, width, color = 'c', bottom=bottomListAll)
+        
+        plt.ylabel('Total tags', fontproperties=font_manager.FontProperties(size=8))
+        plt.xlabel('Tag Length', fontproperties=font_manager.FontProperties(size=8))
+        plt.title('Total tags in %s library matched to %s after processing' % (lib,genomeDB),fontproperties=font_manager.FontProperties(size=9))
+        plt.xticks(np.arange(N), np.arange(int(minLen),int(maxLen)+1),  rotation = 45,  fontproperties=font_manager.FontProperties(size=9) )
+        plt.yticks(np.arange(0,maxAbun2+ybreak2,ybreak2),   fontproperties=font_manager.FontProperties(size=6))
+        ax = plt.gca()
+        ax.yaxis.grid(True)
+        plt.legend((p1[0], p2[0]), ('Mapped reads','Total Reads'), loc=2, prop=font_manager.FontProperties(size=6))
+    
+        ##Turns off the x-axis digits to exponent
+        fmt= matplotlib.ticker.ScalarFormatter(useOffset=False) 
+        fmt.set_scientific(False)
+        ax.yaxis.set_major_formatter(fmt)
+        
+        plt.savefig(plotFile2, format=None , facecolor='w', edgecolor='w', orientation='portrait', papertype=None,  transparent=False, bbox_inches=None, pad_inches=0)
+        plt.clf() ## Clear figure so that next plot is different file
+
+    else:
+        print('\nThe mode selected for generating graph is not correct - Debug for reason')
+        
+    
+    return None
+
+
 ############## MAIN ###########################
 def main(libs):
     
