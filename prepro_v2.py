@@ -191,6 +191,21 @@ def QCheck(aninput):
 
     return None
 
+ ## Output: "genoIndex"
+def indexBuilder(genoFile):
+    print ("\n**Deleting old index 'folder' !!!!!!!!!!!***\n")
+    print('If its a mistake cancel now by pressing ctrl+D and continue from index step by turning off earlier steps- You have 30 seconds')
+    time.sleep(30)
+
+    shutil.rmtree('./index', ignore_errors=True)
+
+    os.mkdir('./index')
+    genoIndex = './index/%s' % (genoFile.rpartition('/')[-1].rpartition('.')[0]) ## Can be merged with genoIndex from earlier part if we use bowtie2 earlier
+    print('**Creating index of cDNA/genomic sequences:%s**\n' % (genoIndex))
+    retcode = subprocess.call(["bowtie2-build", genoFile, genoIndex])
+    return genoIndex
+   
+
 ## Output: "libName.trimmed.fastq"
 def trimLibs(aninput):
     print(aninput)
@@ -302,7 +317,7 @@ def mapper(rawInputs,mode):
         lib,ext,nthread,maxTagLen = aninput
         
         # Resolve index path #################################
-        genoIndexPrePro = genoIndex
+        genoIndexPrePro = indexBuilder(genoFile)
 
         print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
         #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
