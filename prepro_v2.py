@@ -43,9 +43,6 @@ def checkTools():
         sys.exit()
 
 
-
-
-
 def readSet():
     print ("\n######## User Settings #############")
     
