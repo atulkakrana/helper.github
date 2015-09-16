@@ -157,6 +157,13 @@ def readSet():
                 #print("Missed line:",line)
                 pass
 
+    if Trimmomatic_PATH:
+        print("Found:Trimmomatic")
+        pass
+    else:
+        print("Please install 'Trimmomatic' before using the tool")
+        print("See README for how to INSTALL")
+        sys.exit()
 
     if adapterSelection == 1:
         adapterFile=TempaadapterFile
@@ -176,13 +183,7 @@ def readSet():
     else:
         pass
 
-    if Trimmomatic_PATH:
-        print("Found:Trimmomatic")
-        pass
-    else:
-        print("Please install 'Trimmomatic' before using the tool")
-        print("See README for how to INSTALL")
-        sys.exit()
+
 
 
 
@@ -855,6 +856,7 @@ if __name__ == '__main__':
         nproc = int(numProc)
     
     #### Execute modules
+    checkTools()
     libs=readSet()
     main(libs)
     print("\n\n-------Script finished sucessfully - CHEERS!!!!--------\n")
