@@ -2,7 +2,7 @@
 #!/usr/bin/python3
 
 ## Requires fastQC, trimmomatic and tally in $PATH variable
-## Script written by ATUL Kakrana: kakrana@udel.edu, Modified by: Parth Pate: pupatel@udel.edu on 09/10/2015
+## Script written by atul Kakrana: kakrana@udel.edu, modified and published by: Parth Patel: pupatel@udel.edu on 09/10/2015
 
 ## Run : python3 ScriptName.py
 
@@ -20,15 +20,32 @@ import matplotlib.font_manager as font_manager
 
 ## ADVANCED SETTINGS #######################
 
-
 numProc = 0                             ## [developer]  Coarse grain PP [0: Mazimize parallel processing | [1-64]: Number of Cores]
 nthread = 10                            ## [developer]  Fine grain PP
 maxReadLen = 1000                       ## [developer]  Max allowed unchopped read length for graph generation
 
-
 ## FUNCTIONS ##################################
 
 ## Output Global settings
+
+def checkTools():
+    '''Checks for required componenets on user system'''
+
+    print("\n\n Checking for required libraries and components on this system\n\n")
+
+    isFastqc = shutil.which("fastqc")
+    if isFastqc:
+        print("Found:fastqc")
+        pass
+    else:
+        print("Please install 'fastqc' before using the tool")
+        print("http://www.bioinformatics.babraham.ac.uk/projects/fastqc/")
+        sys.exit()
+
+
+
+
+
 def readSet():
     print ("\n######## User Settings #############")
     
@@ -169,6 +186,7 @@ def QCheck(aninput):
     return None
 
  ## Output: "genoIndex"
+
 def indexBuilder(genoFile):
     print ("\n**Deleting old index 'folder' !!!!!!!!!!!***\n")
     print('If its a mistake cancel now by pressing ctrl+D and continue from index step by turning off earlier steps- You have 30 seconds')
@@ -181,7 +199,6 @@ def indexBuilder(genoFile):
     print('**Creating index of cDNA/genomic sequences:%s**\n' % (genoIndex))
     retcode = subprocess.call(["bowtie-build", genoFile, genoIndex])
     return genoIndex
-   
 
 ## Output: "libName.trimmed.fastq"
 def trimLibs(aninput):
@@ -285,8 +302,7 @@ def fastQ2Count(aninput):
         print("Something wrong happened while converting to %s library tag count - Debug for reason" % (lib))
         sys.exit()
 
-
-
+## Convert tagcount to FASTA
 def tagCount2FASTA(inFile,Exprs):
 
     fh_in=open(inFile, 'r')
@@ -318,7 +334,6 @@ def tagCount2FASTA(inFile,Exprs):
     fh_out.close()
 
     return outFile
-
 
 ## Output: "libName.map"
 def mapper(rawInputs,mode):
@@ -449,6 +464,7 @@ def PPBalance(module,alist):
     npool = Pool(int(nprocPP))
     npool.map(module, alist)
 
+## Collect mapped counts
 def mappedStats(aninput,mode):
     '''Parse map file and collect statics for graph generation'''
     print(aninput)
@@ -477,6 +493,7 @@ def mappedStats(aninput,mode):
 
     return mappedList,mappedAbunList
 
+## Collect tag counts
 def tagCountStats(aninput,mode):
 
     '''Get stats for all the reads from tagCount file'''
@@ -510,7 +527,7 @@ def tagCountStats(aninput,mode):
     #print('Total Tags',allTagsList,'\n','Total Abundance',allAbunList)
     return allTagsList,allAbunList
 
-
+## Generate charts
 def charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode):
 
      ### Graphs of pre-processed files i.e trimmed files
@@ -675,8 +692,6 @@ def charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode):
 
     return None
 
-
-
 ############## MAIN ###########################
 def main(libs):
     
@@ -825,6 +840,9 @@ if __name__ == '__main__':
     #### Execute modules
     libs=readSet()
     main(libs)
-    print("\n\n-------Script finished sucessfully - CHEERS!!!! - You owe a beer !_! to Atul--------\n")
+    print("\n\n-------Script finished sucessfully - CHEERS!!!!--------\n")
     
     sys.exit()
+
+## v2.0 Stable
+## Contact pupatel@udel.edu , kakrana@udel.edu
