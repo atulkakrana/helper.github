@@ -1,4 +1,4 @@
-﻿General Notes: Convert FASTQ preprocessing module.
+﻿General Notes: FASTQ preprocessing module.
 Updated: version-1.0 09/16/2015
 
 ======== Description ========
