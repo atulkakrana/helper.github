@@ -147,7 +147,7 @@ Output:
 
 1. RUN WITH PAIRED END FASTQ file to generate TAG COUNT file.
 
-    @libs = SRR501912 <FASTQ file names without extensions separated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+    @libs = SRR501912,SRR501913 <FASTQ file names without extensions separated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
 
 
     <Required Steps, value in string>

@@ -39,8 +39,18 @@ def checkTools():
         pass
     else:
         print("Please install 'fastqc' before using the tool")
-        print("http://www.bioinformatics.babraham.ac.uk/projects/fastqc/")
+        print("See README for how to INSTALL")
         sys.exit()
+
+    isTally = shutil.which("tally")
+    if isTally:
+        print("Found:Tally")
+        pass
+    else:
+        print("Please install 'Tally' before using the tool")
+        print("See README for how to INSTALL")
+        sys.exit()
+
 
 
 def readSet():
@@ -165,6 +175,16 @@ def readSet():
         sys.exit()
     else:
         pass
+
+    if Trimmomatic_PATH:
+        print("Found:Trimmomatic")
+        pass
+    else:
+        print("Please install 'Trimmomatic' before using the tool")
+        print("See README for how to INSTALL")
+        sys.exit()
+
+
 
     print('####################################')
     
