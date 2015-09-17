@@ -31,7 +31,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 3. Put adapter.fa inside the same folder as above. [Please see adapter settings in "prepro.set", if you use your own adapter sequences.]
 4. Put genome inside the same folder as above. [Please see genoFile settings in "prepro.set"]
 5. Configure "prepro.set" with your settings. [Default settings are good to generate TAG COUNT files from single end FASTQ files.]
-6. Finally, go the PREPROCESS folder and run the script using command: "python3 prepro_v2.py"
+6. Finally, go the PREPROCESS folder and run the script using command: "python3 prepro.py"
 
 Output:
 
