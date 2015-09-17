@@ -13,7 +13,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 #           FILES INCLUDED IN DOWNLOADED FOLDER             #
 #############################################################
 
-1. prepro_v2.py [Python3 based processing script.]
+1. prepro.py [Python3 based processing script.]
 2. prepro.set [configuration file to run prepro_v2.py. Default settings are set to run single end FASTQ file]
 3. TruSeq-PE.fa [Paired end adapters in FASTA]
 4. TruSeq-SE.fa [Single end adapters in FASTA]
