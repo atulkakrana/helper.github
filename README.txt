@@ -13,8 +13,8 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 #           FILES INCLUDED IN DOWNLOADED FOLDER             #
 #############################################################
 
-1. prepro_v2.py [Python3 based processing script.]
-2. prepro.set [configuration file to run prepro_v2.py. Default settings are set to run single end FASTQ file]
+1. prepro.py [Python3 based processing script.]
+2. prepro.set [configuration file to run prepro.py. Default settings are set to run single end FASTQ file]
 3. TruSeq-PE.fa [Paired end adapters in FASTA]
 4. TruSeq-SE.fa [Single end adapters in FASTA]
 5. cleanFasta.py [Not used - Cleans the FASTA file header, trunchates the header till first whitespace and pipe and removes whitelines.]
@@ -31,7 +31,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 3. Put adapter.fa inside the same folder as above. [Please see adapter settings in "prepro.set", if you use your own adapter sequences.]
 4. Put genome inside the same folder as above. [Please see genoFile settings in "prepro.set"]
 5. Configure "prepro.set" with your settings. [Default settings are good to generate TAG COUNT files from single end FASTQ files.]
-6. Finally, go the PREPROCESS folder and run the script using command: "python3 prepro_v2.py"
+6. Finally, go the PREPROCESS folder and run the script using command: "python3 prepro.py"
 
 Output:
 
