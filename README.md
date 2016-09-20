@@ -20,7 +20,6 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 5. cleanFasta.py    :[Optional, Cleans the FASTA file header | USAGE: python3 cleanFasta.py FASTAFILE]
 6. README.txt
 
-          ---------------------------------
 
 ### How to use script for pre-processing Illumina seqeuncing libraries 
 
@@ -42,8 +41,6 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 4. *chopped.trimmed.fastq [Chopped and Trimmed file]
 5. Compressed folder .ZIP folder: contains aforementioned FASTQC results
 5. *.PNG [Generate images if settings are configured in "prepro.set" .]
-
-          ---------------------------------
 
 
 ### Libraries or packages required to use script
