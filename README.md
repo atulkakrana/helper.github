@@ -9,7 +9,7 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 |**Files**        |**Description**                                                                          |
 |:----------------|:----------------------------------------------------------------------------------------|
 |prepro.py        |Python3 based processing script                                                          |
-|prepro.set       |Settings file for run 'prepro.py'. Default settings are set to run single end FASTQ file |
+|prepro.set       |Settings file for run *prepro.py*. Default settings are set to run single end FASTQ file |
 |TruSeq-PE.fa     |FASTA file containing generic (Illumina) paired end adapters                             |
 |TruSeq-SE.fa     |FASTA file containing generic (Illumina) single end adapters                             |
 |cleanFasta.py    |Optional use, script to clean FASTA file header. USAGE: `python3 cleanFasta.py FASTAFILE`|
@@ -23,7 +23,7 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 4. Put approporiate adpaters file (supplied here) inside the *PREPROCESS* folder. You can add your adapters if different from generic Illumina adpaters to the same file or supply these in a new FASTA file *prepro.set* file against `@adapterFile` option
 5. [optional] Put genome FASTA inside the same folder, this will be used to map the reads to genome and provide charts. See `@genoFile` option in *prepro.set*
 6. Add your library filenames to *prepro.set* file. These are added as comma-separted list against `@libs` parameter. see examples below.
-7. Configure *prepro.set* with additional setting that suits your analysis. Default settings are good to generate TAG COUNT files from single-end (FASTQ) files.
+7. Configure *prepro.set* with additional settings (See *Examples* section below) that suits your analysis. Default settings are good to generate TAG COUNT files from single-end (FASTQ) files.
 8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
