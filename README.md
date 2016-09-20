@@ -15,7 +15,6 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 |cleanFasta.py    |Optional use, script to clean FASTA file header. USAGE: `python3 cleanFasta.py FASTAFILE`|
 |README.txt       |README file in text format                                                               |
 
-
 ### Steps to pre-process (Illumina) seqeuncing libraries 
 
 1. Install necessary packages. Read *Install* section below.
@@ -39,7 +38,6 @@ identified based on their extensions.Below is the list of extensions and files:
 |*chopped.trimmed.fastq         | Chopped and Trimmed file                                  |
 |*.ZIP  | Contains aforementioned FASTQC results                                            |
 |*.PNG                          | Generate images if settings are configured in "prepro.set"|
-
 
 ### Libraries or packages required to use script
 Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
@@ -76,7 +74,7 @@ from IT department or Linux Administartor.
     `pwd` 
     Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for **prepro.set** options)
 
-4. INSTALL Tally
+4. INSTALL **Tally**
 
     Step-1: Fetch Binaries 
     `wget http://www.ebi.ac.uk/~stijn/reaper/src/reaper-14-020.tgz`
@@ -92,7 +90,7 @@ from IT department or Linux Administartor.
     Step-4: Use new PATH
     `source ~/.bash_profile` or Log out and login again
 
-5. [Optional] SRAtool kit on CentOS to download seqeuncing data from public domain like GEO
+5. [Optional] **SRAtool** kit on CentOS to download seqeuncing data from public domain like GEO
     
     Step-1: Fetch Binaries
     `wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz`
@@ -111,7 +109,7 @@ from IT department or Linux Administartor.
     e.g., `fastq-dump -A SRR501913 --split-files`    
 
 ### Examples
-See below `prepro.set file` with options for:
+See below *prepro.set* file with options for:
 
 1. Preprocessing paired-end sequencing libraries
 
