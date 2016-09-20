@@ -17,13 +17,13 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 
 ### Steps to pre-process (Illumina) seqeuncing libraries 
 
-1. Install necessary packages. Read *Install* section below.
+1. Install necessary packages. Read [Install]( section below.
 2. Make a folder for pre-processing analysis. Lets call it *PREPROCESS* for this readme.
 3. Put all your FASTQ files inside this *PREPROCESS* folder
 4. Put approporiate adpaters file (supplied here) inside the *PREPROCESS* folder. You can add your adapters if different from generic Illumina adpaters to the same file or supply these in a new FASTA file *prepro.set* file against `@adapterFile` option
 5. [optional] Put genome FASTA inside the same folder, this will be used to map the reads to genome and provide charts. See `@genoFile` option in *prepro.set*
 6. Add your library filenames to *prepro.set* file. These are added as comma-separted list against `@libs` parameter. see examples below.
-7. Configure *prepro.set* with additional settings (See *Examples* section below) that suits your analysis. Default settings are good to generate TAG COUNT files from single-end (FASTQ) files.
+7. Configure *prepro.set* with additional settings (See [Examples](https://github.com/atulkakrana/helper.github#examples) section below) that suits your analysis. Default settings are good to generate TAG COUNT files from single-end (FASTQ) files.
 8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
@@ -39,7 +39,7 @@ identified based on their extensions.Below is the list of extensions and files:
 |*.ZIP  | Contains aforementioned FASTQC results                                            |
 |*.PNG                          | Generate images if settings are configured in "prepro.set"|
 
-### Libraries or packages required to use script
+### Install prerequisites
 Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
 from IT department or Linux Administartor. 
 
