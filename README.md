@@ -71,8 +71,8 @@ from IT department or Linux Administartor.
     `mv Trimmomatic-0.33 Trimmomatic`  
     
     Step-3: Copy the installation path of **Trimmomatic** to **prepro.set** file  
-    `pwd` 
-    Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for **prepro.set** options)
+    `pwd`  
+    Copy the output of above command to prepro.set file against `@Trimmomatic_PATH` option (See [Examples](https://github.com/atulkakrana/helper.github#examples) below for **prepro.set** options)
 
 4. INSTALL **Tally**
 
