@@ -1,4 +1,6 @@
-﻿General Notes: FASTQ preprocessing module.
+﻿## Synopsis
+
+General Notes: FASTQ preprocessing module.
 Updated: version-1.0 09/16/2015
 
 ======== Description ========
@@ -9,9 +11,8 @@ from default Illumina adapters. The parameter file also determines whether the F
 and whether it generates the graphs after trimming and chop-ping (for which the genome sequence must be provided). 
 
 
-#############################################################
-#           FILES INCLUDED IN DOWNLOADED FOLDER             #
-#############################################################
+
+## Files        
 
 1. prepro.py [Python3 based processing script.]
 2. prepro.set [configuration file to run prepro.py. Default settings are set to run single end FASTQ file]
@@ -22,9 +23,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 
           ---------------------------------
 
-##############################################################
-#                   RUN SCRIPT                               #
-##############################################################
+## How to use script for pre-processing Illumina seqeuncing libraries 
 
 1. READ INSTALL mentioned below to install 3rd party tools.
 2. Put all FASTQ files inside downloaded PREPROCESS folder.
@@ -33,7 +32,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 5. Configure "prepro.set" with your settings. [Default settings are good to generate TAG COUNT files from single end FASTQ files.]
 6. Finally, go the PREPROCESS folder and run the script using command: USAGE "python3 prepro.py"
 
-Output:
+## Output 
 
 1. *trimmed_fastqc.html [FASTQC report. by default ]
 2. *chopped.trimmed.processed.txt [TAG COUNT file after trimming and chopping]
@@ -45,9 +44,7 @@ Output:
           ---------------------------------
 
 
-##################################################################
-                    REQUIRED INSTALL                             #
-##################################################################
+## Libraries or packages required to use script
 
 1. INSTALL Python3 [Ignore this step you have Python v3]
 
@@ -108,14 +105,8 @@ Output:
 
     Log out and login again
     
-          ---------------------------------
 
-
-#################################################################
-#                    OPTIONAL INSTALL                           #
-#################################################################
-
-1. Optional: SRAtool kit on CentOS to download Paired End data.
+5. [Optional] SRAtool kit on CentOS to download Paired End data.
     
       Step-1: Fetch Binaries   [You can download windows as well as different LINUX versions their website. 
       wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz
@@ -141,11 +132,9 @@ Output:
     
           ---------------------------------
 
-#####################################################################
-#              EXAMPLE OF SETTINGS FILE "prepro.set"                #
-#####################################################################
+## Examples
 
-1. RUN WITH PAIRED END FASTQ file to generate TAG COUNT file.
+1. Preprocess libraries from paired-end seqeincing
 
     @libs = SRR501912,SRR501913             <FASTQ file names without extensions separated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
 
@@ -184,7 +173,7 @@ Output:
     
     ---------------------------------
 
-2. RUN WITH SINGLE END FASTQ file to generate TAG COUNT file + graphs [We are not using default adapters, so we input adapter.fa].
+2.  Preprocess libraries from paired-end seqeincing + graphs [We are not using default adapters, so we input adapter.fa].
 
     @libs = HEN1-1,HEN1-8                   <FASTQ file names without extensions seperated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
 
@@ -222,12 +211,14 @@ Output:
     
     ---------------------------------
     
-======= Contact ===========
-Parth Patel
-pupatel@dbi.udel.edu
+## Contact
 
 Atul Kakrana
 kakrana@udel.edu
 
+Parth Patel
+pupatel@dbi.udel.edu
 
-===== END of README =======
+## Publication
+Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452.
+
