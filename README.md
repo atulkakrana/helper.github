@@ -30,8 +30,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 5. Put genome FASTA inside the same folder, this will be used to map the reads and provide charts [Please see genoFile settings in "prepro.set"]
 6. Add your library filenames to prepro.set file. These are added as comma-separted list against '@libs' parameter [see examples below]
 7. Configure "prepro.set" with additional setting that suits your analysis [Default settings are good to generate TAG COUNT files from single end FASTQ files]
-8. Finally, run the pre-processing script using command:
-            python3 prepro.py
+8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
 
@@ -45,38 +44,41 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 
 ### Libraries or packages required to use script
 
-1. INSTALL Python3 [Ignore this step you have Python v3]
+1. INSTALL `Python3` [Ignore this step you have Python v3]
 
     Follow instructions from https://www.python.org/downloads/
 
-2. INSTALL FastQC
+2. INSTALL `FastQC`
 
-    Step-1: Fetch Binaries ()
+    Step-1: Fetch Binaries
+    ```
     wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip
-
+    ```
     Step-2: Unzip the binaries
     unzip fastqc_v*
 
     Step-3: Export the PATH
+    ```
     touch ~/.bash_profile [If not bash_profile file set ever before]
     echo 'export PATH=$PATH:~/FastQC/'  >> ~/.bash_profile
+    ```
 
     Step-4: Use new PATH
-    source ~/.bash_profile 
-
-    or 
-
-    Log out and login again
+    `source ~/.bash_profile` or Log out and login again
 
 
 3. INSTALL Trimmomatic
 
-    Step-1: Fetch Binaries ()
+    Step-1: Fetch Binaries
+    '''
     wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip
+    '''
 
     Step-2: Unzip the binaries
+    '''
     unzip Trimmomatic*
     mv Trimmomatic-0.33 Trimmomatic
+    '''
 
     Step-3: Copy PATH to prepro.set file 
     pwd [copy the PATH and set variable '@Trimmomatic_PATH' in the prepro.set to this PATH.]
