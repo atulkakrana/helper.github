@@ -45,14 +45,14 @@ identified based on their extensions.Below is the list of extensions and files:
 Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
 from IT department or Linux Administartor. 
 
-1. INSTALL *Python3* [Ignore this step you have Python v3]
+1. INSTALL **Python3** [Ignore this step you have Python v3]
     Follow instructions from https://www.python.org/downloads/
 
-2. INSTALL *FastQC*
+2. INSTALL **FastQC**
     Step-1: Fetch Binaries
     ```wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip```
     
-    Step-2: Unzip the downloaded *FASTQC* binary file
+    Step-2: Unzip the downloaded **FASTQC** binary file
     `unzip fastqc_v*`
 
     Step-3: Export the PATH 
@@ -63,26 +63,25 @@ from IT department or Linux Administartor.
     Step-4: Use new profile
     `source ~/.bash_profile` or Log out and login again
 
-
-3. INSTALL *Trimmomatic*
+3. INSTALL **Trimmomatic**
 
     Step-1: Fetch Binaries 
     `wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip`
     
-    Step-2: Unzip the downloaded *Trimmomatic* binaries
+    Step-2: Unzip the downloaded **Trimmomatic** binaries
     `unzip Trimmomatic*`
     `mv Trimmomatic-0.33 Trimmomatic`
     
-    Step-3: Copy the installation path of *Trimmomatic* to *prepro.set* file 
+    Step-3: Copy the installation path of **Trimmomatic** to **prepro.set** file 
     `pwd` 
-    Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for *prepro.set* options)
+    Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for **prepro.set** options)
 
 4. INSTALL Tally
 
     Step-1: Fetch Binaries 
     `wget http://www.ebi.ac.uk/~stijn/reaper/src/reaper-14-020.tgz`
     
-    Step-2: Unzip the *Tally* binaries and install
+    Step-2: Unzip the **Tally** binaries and install
     `tar -xvzf reaper*.tgz`
     `cd reaper-14-020/src`
     `make`
@@ -92,28 +91,24 @@ from IT department or Linux Administartor.
     
     Step-4: Use new PATH
     `source ~/.bash_profile` or Log out and login again
-    
 
 5. [Optional] SRAtool kit on CentOS to download seqeuncing data from public domain like GEO
     
     Step-1: Fetch Binaries
     `wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz`
-     
+
     Step-2: Unzip the binaries
     `tar -zxvf sratoolkit.2.5.2-centos_linux64.tar.gz`
-      
-      
+    
     Step-3: Export the PATH
     `echo 'export PATH=$PATH:~/sratoolkit.2.5.2-centos_linux64/bin' >> ~/.bash_profile`
-      
+    
     Step-4: Use this new PATH
     `source ~/.bash_profile` or Log out and login again
-      
+    
     Step-5: Download paired end data using accession.
-      
     e.g., `fastq-dump -A SRR501912 --split-files` [These will download the fastq file and split them as _1.fastq and _2.fastq.]
     e.g., `fastq-dump -A SRR501913 --split-files`    
-
 
 ### Examples
 See below `prepro.set file` with options for:
@@ -176,7 +171,6 @@ See below `prepro.set file` with options for:
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar               < provide a path to the .jar file. For ex
 
 ### Contact
-
 Atul Kakrana: kakrana@udel.edu
 Parth Patel : pupatel@dbi.udel.edu
 
