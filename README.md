@@ -1,24 +1,19 @@
-﻿### Synopsis
+### Synopsis
+**version**: v1.0
+**updated**: 09/16/2015
 
-General Notes: FASTQ preprocessing module
-Updated: version-1.0 09/16/2015
-
-we provided users with a standalone and Python-based FASTQ processing script to produce the “tag count” formatted
-files required as input to our webtool.The processing script performs trimming and chopping, taking the raw FASTQ
-file(s) (single or paired end) and a set of user-defined parameters that include adapter sequences that may vary 
-from default Illumina adapters. The parameter file also determines whether the FASTQ processing yields a FASTQC report,
-and whether it generates the graphs after trimming and chop-ping (for which the genome sequence must be provided). 
-
-
+Python-based FASTQ pre-processing script to produce the “tag count” formatted output files.The processing script performs trimming and chopping, taking the raw FASTQ file(s) (single or paired end) and a set of user-defined parameters that include adapter sequences that may vary from default Illumina adapters. The parameter file also determines whether the FASTQ processing yields a FASTQC report,and whether it generates the graphs after trimming and chop-ping (for which the genome sequence must be provided). 
 
 ### Files        
 
-1. prepro.py        :[Python3 based processing script]
-2. prepro.set       :[configuration file to run prepro.py. Default settings are set to run single end FASTQ file]
-3. TruSeq-PE.fa     :[Paired end adapters in FASTA]
-4. TruSeq-SE.fa     :[Single end adapters in FASTA]
-5. cleanFasta.py    :[Optional, Cleans the FASTA file header | USAGE: python3 cleanFasta.py FASTAFILE]
-6. README.txt
+|**Files**        |**Description**                                                                          |
+|:----------------|:----------------------------------------------------------------------------------------|
+|prepro.py        |Python3 based processing script                                                          |
+|prepro.set       |Settings file for run 'prepro.py'. Default settings are set to run single end FASTQ file |
+|TruSeq-PE.fa     |FASTA file containing generic (Illumina) paired end adapters                             |
+|TruSeq-SE.fa     |FASTA file containing generic (Illumina) single end adapters                             |
+|cleanFasta.py    |Optional use, script to clean FASTA file header. USAGE: `python3 cleanFasta.py FASTAFILE`|
+|README.txt       |README file in text format                                                               |
 
 
 ### How to use script for pre-processing Illumina seqeuncing libraries 
@@ -33,13 +28,17 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
+Script genrates several output files corresponding to different several pre-processing. These files are 
+identified based on their extensions.Below is the list of extensions and files:
 
-1. *trimmed_fastqc.html [FASTQC report. by default ]
-2. *chopped.trimmed.processed.txt [TAG COUNT file after trimming and chopping]
-3. *trimmed.fastq [Trimmed file]
-4. *chopped.trimmed.fastq [Chopped and Trimmed file]
-5. Compressed folder .ZIP folder: contains aforementioned FASTQC results
-5. *.PNG [Generate images if settings are configured in "prepro.set" .]
+| File Extensions               |  Description                                              |
+|:------------------------------|:----------------------------------------------------------|
+|*trimmed_fastqc.html           | FASTQC report                                             |
+|*chopped.trimmed.processed.txt | TAG COUNT file after trimming and chopping                |
+|*trimmed.fastq                 | Trimmed file                                              |
+|*chopped.trimmed.fastq         | Chopped and Trimmed file                                  |
+|*.ZIP  | Contains aforementioned FASTQC results                                            |
+|*.PNG                          | Generate images if settings are configured in "prepro.set"|
 
 
 ### Libraries or packages required to use script
