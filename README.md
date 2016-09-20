@@ -16,15 +16,15 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 |README.txt       |README file in text format                                                               |
 
 
-### How to use script for pre-processing Illumina seqeuncing libraries 
+### Steps to pre-process (Illumina) seqeuncing libraries 
 
-1. READ INSTALL section below to install necessary packages
-2. make a folder for pre-processing.  Lets call it PREPROCESS for this readme.
-3. Put all your FASTQ files inside this PREPROCESS folder
-4. Put adapter.fa inside the same folder [Please see adapter settings in "prepro.set", if you use your own adapter sequences]
-5. Put genome FASTA inside the same folder, this will be used to map the reads and provide charts [Please see genoFile settings in "prepro.set"]
-6. Add your library filenames to prepro.set file. These are added as comma-separted list against '@libs' parameter [see examples below]
-7. Configure "prepro.set" with additional setting that suits your analysis [Default settings are good to generate TAG COUNT files from single end FASTQ files]
+1. Install necessary packages. Read *Install* section below.
+2. Make a folder for pre-processing analysis. Lets call it *PREPROCESS* for this readme.
+3. Put all your FASTQ files inside this *PREPROCESS* folder
+4. Put approporiate adpaters file (supplied here) inside the *PREPROCESS* folder. You can add your adapters if different from generic Illumina adpaters to the same file or supply these in a new FASTA file *prepro.set* file against `@adapterFile` option
+5. [optional] Put genome FASTA inside the same folder, this will be used to map the reads to genome and provide charts. See `@genoFile` option in *prepro.set*
+6. Add your library filenames to *prepro.set* file. These are added as comma-separted list against `@libs` parameter. see examples below.
+7. Configure *prepro.set* with additional setting that suits your analysis. Default settings are good to generate TAG COUNT files from single-end (FASTQ) files.
 8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
@@ -42,116 +42,94 @@ identified based on their extensions.Below is the list of extensions and files:
 
 
 ### Libraries or packages required to use script
+Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
+from IT department or Linux Administartor. 
 
-1. INSTALL `Python3` [Ignore this step you have Python v3]
-
+1. INSTALL *Python3* [Ignore this step you have Python v3]
     Follow instructions from https://www.python.org/downloads/
 
-2. INSTALL `FastQC`
-
+2. INSTALL *FastQC*
     Step-1: Fetch Binaries
-    ```
-    wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip
-    ```
-    Step-2: Unzip the binaries
-    unzip fastqc_v*
+    ```wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip```
+    
+    Step-2: Unzip the downloaded *FASTQC* binary file
+    `unzip fastqc_v*`
 
-    Step-3: Export the PATH
-    ```
-    touch ~/.bash_profile [If not bash_profile file set ever before]
-    echo 'export PATH=$PATH:~/FastQC/'  >> ~/.bash_profile
-    ```
-
-    Step-4: Use new PATH
+    Step-3: Export the PATH 
+    If no `bash_profile` file set before, first make a profile file: `touch ~/.bash_profile`
+    and then:
+    ```echo 'export PATH=$PATH:~/FastQC/'  >> ~/.bash_profile```
+    
+    Step-4: Use new profile
     `source ~/.bash_profile` or Log out and login again
 
 
-3. INSTALL Trimmomatic
+3. INSTALL *Trimmomatic*
 
-    Step-1: Fetch Binaries
-    '''
-    wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip
-    '''
-
-    Step-2: Unzip the binaries
-    '''
-    unzip Trimmomatic*
-    mv Trimmomatic-0.33 Trimmomatic
-    '''
-
-    Step-3: Copy PATH to prepro.set file 
-    pwd [copy the PATH and set variable '@Trimmomatic_PATH' in the prepro.set to this PATH.]
-
+    Step-1: Fetch Binaries 
+    `wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip`
+    
+    Step-2: Unzip the downloaded *Trimmomatic* binaries
+    `unzip Trimmomatic*`
+    `mv Trimmomatic-0.33 Trimmomatic`
+    
+    Step-3: Copy the installation path of *Trimmomatic* to *prepro.set* file 
+    `pwd` 
+    Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for *prepro.set* options)
 
 4. INSTALL Tally
 
     Step-1: Fetch Binaries 
-    wget http://www.ebi.ac.uk/~stijn/reaper/src/reaper-14-020.tgz
-
-
-    Step-2: Unzip the binaries
-    tar -xvzf reaper*.tgz
-
+    `wget http://www.ebi.ac.uk/~stijn/reaper/src/reaper-14-020.tgz`
+    
+    Step-2: Unzip the *Tally* binaries and install
+    `tar -xvzf reaper*.tgz`
+    `cd reaper-14-020/src`
+    `make`
+    
     Step-3: Export the PATH
-
-    cd reaper-14-020/src
-    make
-    echo 'export PATH=$PATH:~/reaper-14-020/src/'  >> ~/.bash_profile
-
+    `echo 'export PATH=$PATH:~/reaper-14-020/src/'  >> ~/.bash_profile`
+    
     Step-4: Use new PATH
-    source ~/.bash_profile 
-
-    or 
-
-    Log out and login again
+    `source ~/.bash_profile` or Log out and login again
     
 
-5. [Optional] SRAtool kit on CentOS to download Paired End data.
+5. [Optional] SRAtool kit on CentOS to download seqeuncing data from public domain like GEO
     
-      Step-1: Fetch Binaries   [You can download windows as well as different LINUX versions their website. 
-      wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz
+    Step-1: Fetch Binaries
+    `wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz`
      
-      Step-2: Unzip the binaries
-      tar -zxvf sratoolkit.2.5.2-centos_linux64.tar.gz
+    Step-2: Unzip the binaries
+    `tar -zxvf sratoolkit.2.5.2-centos_linux64.tar.gz`
       
       
-      Step-3: Export the PATH
-      echo 'export PATH=$PATH:~/sratoolkit.2.5.2-centos_linux64/bin' >> ~/.bash_profile
+    Step-3: Export the PATH
+    `echo 'export PATH=$PATH:~/sratoolkit.2.5.2-centos_linux64/bin' >> ~/.bash_profile`
       
-      Step-4: Use new PATH
-      source ~/.bash_profile 
-
-      or 
-
-      Log out and login again
+    Step-4: Use this new PATH
+    `source ~/.bash_profile` or Log out and login again
       
-      Step-5: Download paired end data using accession.
+    Step-5: Download paired end data using accession.
       
-      e.g., fastq-dump -A SRR501912 --split-files [These will download the fastq file and split them as _1.fastq and _2.fastq.]
-      e.g., fastq-dump -A SRR501913 --split-files    
+    e.g., `fastq-dump -A SRR501912 --split-files` [These will download the fastq file and split them as _1.fastq and _2.fastq.]
+    e.g., `fastq-dump -A SRR501913 --split-files`    
 
 
 ### Examples
+See below `prepro.set file` with options for:
 
-1. Preprocess libraries from paired-end seqeincing
+1. Preprocessing paired-end sequencing libraries
 
             @libs = SRR501912,SRR501913             <FASTQ file names without extensions separated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
-
-
+            
             <Required Steps, value in string>
-
             @genoFile=                              <Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
-
-
-
+            
             <Optional Steps, value in boolean>
-
             @QCheckStep = 1                         <Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
             @preProGraphsStep = 0                   <Default: 0, 1 Generates before-chopping graphs and used only if genoFile is provided by user.>
-
-
+            
             <Required Steps, value in boolean>
-
             @seqType = 1                            < 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
             @trimLibsStep = 1                       <Trim FASTQ file>
             @chopLibsStep = 1                       <Chop file>
@@ -163,10 +141,8 @@ identified based on their extensions.Below is the list of extensions and files:
             @maxLen = 21                            <Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping >
             @minLen = 20                            <Min length of tag allowed>
             @unpairDel = 1                          <[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
-
-
-            <Required PATH for TOOLs>
             
+            <Required PATH for TOOLs>
             @adapterFile=                           < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar           < provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar  >
 
@@ -174,22 +150,15 @@ identified based on their extensions.Below is the list of extensions and files:
 2.  Preprocess libraries from paired-end seqeincing + graphs [We are not using default adapters, so we input adapter.fa].
 
             @libs = HEN1-1,HEN1-8                   <FASTQ file names without extensions seperated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
-
-
+            
             <Required Steps, value in string>
-
             @genoFile= ath_TAIR10_genome.fa         <Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
-
-
-
+            
             <Optional Steps, value in boolean>
-
             @QCheckStep = 1                         <Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
             @preProGraphsStep = 1                   <Default: 0, 1 Generates before-chopping graphs and used only if genoFile is provided by user.>
-
-
+            
             <Required Steps, value in boolean>
-
             @seqType = 0                            < 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
             @trimLibsStep = 1                       <Trim FASTQ file>
             @chopLibsStep = 1                       <Chop file>
@@ -201,17 +170,14 @@ identified based on their extensions.Below is the list of extensions and files:
             @maxLen = 21                            <Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping >
             @minLen = 20                            <Min length of tag allowed>
             @unpairDel = 1                          <[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
-
-
+            
             <Required PATH for TOOLs>
             @adapterFile= adapter.fa                < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar               < provide a path to the .jar file. For ex
-    
-    
+
 ### Contact
 
 Atul Kakrana: kakrana@udel.edu
-
 Parth Patel : pupatel@dbi.udel.edu
 
 ## Publication
