@@ -1,6 +1,6 @@
 ### Synopsis
-**version**: v1.0
-**updated**: 09/16/2015
+**version**: v1.0  
+**updated**: 09/16/2015  
 
 Python-based FASTQ pre-processing script to produce the “tag count” formatted output files.The processing script performs trimming and chopping, taking the raw FASTQ file(s) (single or paired end) and a set of user-defined parameters that include adapter sequences that may vary from default Illumina adapters. The parameter file also determines whether the FASTQ processing yields a FASTQC report,and whether it generates the graphs after trimming and chop-ping (for which the genome sequence must be provided). 
 
@@ -169,9 +169,9 @@ See below *prepro.set* file with options for:
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar               < provide a path to the .jar file. For ex
 
 ### Contact
-Atul Kakrana: kakrana@udel.edu
-Parth Patel : pupatel@dbi.udel.edu
+Atul Kakrana: kakrana@udel.edu  
+Parth Patel : pupatel@dbi.udel.edu  
 
 ## Publication
-Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452 [Link](http://www.ncbi.nlm.nih.gov/pubmed/26454275)
+Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452 [Read at PubMed](http://www.ncbi.nlm.nih.gov/pubmed/26454275)
 
