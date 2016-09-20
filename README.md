@@ -13,23 +13,26 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
 
 ### Files        
 
-1. prepro.py [Python3 based processing script.]
-2. prepro.set [configuration file to run prepro.py. Default settings are set to run single end FASTQ file]
-3. TruSeq-PE.fa [Paired end adapters in FASTA]
-4. TruSeq-SE.fa [Single end adapters in FASTA]
-5. cleanFasta.py [Not used - Cleans the FASTA file header, trunchates the header till first whitespace and pipe and removes whitelines.  USAGE: python3 cleanFasta.py FASTAFILE]
+1. prepro.py        :[Python3 based processing script]
+2. prepro.set       :[configuration file to run prepro.py. Default settings are set to run single end FASTQ file]
+3. TruSeq-PE.fa     :[Paired end adapters in FASTA]
+4. TruSeq-SE.fa     :[Single end adapters in FASTA]
+5. cleanFasta.py    :[Optional, Cleans the FASTA file header | USAGE: python3 cleanFasta.py FASTAFILE]
 6. README.txt
 
           ---------------------------------
 
 ### How to use script for pre-processing Illumina seqeuncing libraries 
 
-1. READ INSTALL mentioned below to install 3rd party tools.
-2. Put all FASTQ files inside downloaded PREPROCESS folder.
-3. Put adapter.fa inside the same folder as above. [Please see adapter settings in "prepro.set", if you use your own adapter sequences.]
-4. Put genome inside the same folder as above. [Please see genoFile settings in "prepro.set"]
-5. Configure "prepro.set" with your settings. [Default settings are good to generate TAG COUNT files from single end FASTQ files.]
-6. Finally, go the PREPROCESS folder and run the script using command: USAGE "python3 prepro.py"
+1. READ INSTALL section below to install necessary packages
+2. make a folder for pre-processing.  Lets call it PREPROCESS for this readme.
+3. Put all your FASTQ files inside this PREPROCESS folder
+4. Put adapter.fa inside the same folder [Please see adapter settings in "prepro.set", if you use your own adapter sequences]
+5. Put genome FASTA inside the same folder, this will be used to map the reads and provide charts [Please see genoFile settings in "prepro.set"]
+6. Add your library filenames to prepro.set file. These are added as comma-separted list against '@libs' parameter [see examples below]
+7. Configure "prepro.set" with additional setting that suits your analysis [Default settings are good to generate TAG COUNT files from single end FASTQ files]
+8. Finally, run the pre-processing script using command:
+            python3 prepro.py
 
 ### Output 
 
@@ -128,8 +131,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
       
       e.g., fastq-dump -A SRR501912 --split-files [These will download the fastq file and split them as _1.fastq and _2.fastq.]
       e.g., fastq-dump -A SRR501913 --split-files    
-    
-          ---------------------------------
+
 
 ### Examples
 
@@ -169,8 +171,7 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
             
             @adapterFile=                           < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar           < provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar  >
-    
-    ---------------------------------
+
 
 2.  Preprocess libraries from paired-end seqeincing + graphs [We are not using default adapters, so we input adapter.fa].
 
@@ -208,15 +209,12 @@ and whether it generates the graphs after trimming and chop-ping (for which the 
             @adapterFile= adapter.fa                < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
             @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar               < provide a path to the .jar file. For ex
     
-    ---------------------------------
     
 ### Contact
 
-Atul Kakrana
-kakrana@udel.edu
+Atul Kakrana: kakrana@udel.edu
 
-Parth Patel
-pupatel@dbi.udel.edu
+Parth Patel : pupatel@dbi.udel.edu
 
 ## Publication
 Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452.
