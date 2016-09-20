@@ -39,38 +39,38 @@ identified based on their extensions.Below is the list of extensions and files:
 |*.ZIP  | Contains aforementioned FASTQC results                                            |
 |*.PNG                          | Generate images if settings are configured in "prepro.set"|
 
-### Install prerequisites
+### Install prerequisites  
 Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
-from IT department or Linux Administartor. 
+from IT department or Linux Administartor.   
 
-1. INSTALL **Python3** [Ignore this step you have Python v3]
-    Follow instructions from https://www.python.org/downloads/
+1. INSTALL **Python3** [Ignore this step you have Python v3]   
+    Follow instructions from https://www.python.org/downloads/    
 
-2. INSTALL **FastQC**
-    Step-1: Fetch Binaries
-    ```wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip```
+2. INSTALL **FastQC**    
+    Step-1: Fetch Binaries    
+    ```wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip```   
     
-    Step-2: Unzip the downloaded **FASTQC** binary file
-    `unzip fastqc_v*`
+    Step-2: Unzip the downloaded **FASTQC** binary file   
+    `unzip fastqc_v*`  
 
-    Step-3: Export the PATH 
+    Step-3: Export the PATH   
     If no `bash_profile` file set before, first make a profile file: `touch ~/.bash_profile`
-    and then:
-    ```echo 'export PATH=$PATH:~/FastQC/'  >> ~/.bash_profile```
+    and then:  
+    ```echo 'export PATH=$PATH:~/FastQC/'  >> ~/.bash_profile```  
     
-    Step-4: Use new profile
-    `source ~/.bash_profile` or Log out and login again
+    Step-4: Use new profile  
+    `source ~/.bash_profile` or Log out and login again  
 
-3. INSTALL **Trimmomatic**
+3. INSTALL **Trimmomatic**  
 
-    Step-1: Fetch Binaries 
-    `wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip`
+    Step-1: Fetch Binaries  
+    `wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip`  
     
-    Step-2: Unzip the downloaded **Trimmomatic** binaries
-    `unzip Trimmomatic*`
-    `mv Trimmomatic-0.33 Trimmomatic`
+    Step-2: Unzip the downloaded **Trimmomatic** binaries  
+    `unzip Trimmomatic*`  
+    `mv Trimmomatic-0.33 Trimmomatic`  
     
-    Step-3: Copy the installation path of **Trimmomatic** to **prepro.set** file 
+    Step-3: Copy the installation path of **Trimmomatic** to **prepro.set** file  
     `pwd` 
     Copy the output of above command to prepro.set file against '@Trimmomatic_PATH' option (See Below for **prepro.set** options)
 
