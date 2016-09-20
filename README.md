@@ -17,7 +17,7 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 
 ### Steps to pre-process (Illumina) seqeuncing libraries 
 
-1. Install necessary packages. Read [Install Pre-requisites](https://github.com/atulkakrana/helper.github/blob/master/README.md#install-prerequisites)section below.
+1. Install necessary packages. Read [Install Pre-requisites](https://github.com/atulkakrana/helper.github/blob/master/README.md#install-prerequisites) section below.
 2. Make a folder for pre-processing analysis. Lets call it *PREPROCESS* for this readme.
 3. Put all your FASTQ files inside this *PREPROCESS* folder
 4. Put approporiate adpaters file (supplied here) inside the *PREPROCESS* folder. You can add your adapters if different from generic Illumina adpaters to the same file or supply these in a new FASTA file *prepro.set* file against `@adapterFile` option
