@@ -173,5 +173,5 @@ Atul Kakrana: kakrana@udel.edu
 Parth Patel : pupatel@dbi.udel.edu
 
 ## Publication
-Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452.
+Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452 [Link](http://www.ncbi.nlm.nih.gov/pubmed/26454275)
 
