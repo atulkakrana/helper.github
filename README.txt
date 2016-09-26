@@ -223,11 +223,10 @@ Output:
     ---------------------------------
     
 ======= Contact ===========
-Parth Patel
-pupatel@dbi.udel.edu
-
 Atul Kakrana
 kakrana@udel.edu
 
+Parth Patel
+pupatel@dbi.udel.edu
 
 ===== END of README =======
