@@ -9,9 +9,9 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 |**Files**        |**Description**                                                                          |
 |:----------------|:----------------------------------------------------------------------------------------|
 |prepro.py        |Python3 based processing script                                                          |
-|prepro.set       |Settings file for run *prepro.py*. Default settings are set to run single end FASTQ file |
-|TruSeq-PE.fa     |FASTA file containing generic (Illumina) paired end adapters                             |
-|TruSeq-SE.fa     |FASTA file containing generic (Illumina) single end adapters                             |
+|prepro.set       |Settings file for run *prepro.py*. Default settings are set to process single-end FASTQ file |
+|TruSeq-PE.fa     |FASTA file containing generic (Illumina) paired-end adapters                             |
+|TruSeq-SE.fa     |FASTA file containing generic (Illumina) single-end adapters                             |
 |cleanFasta.py    |Optional use, script to clean FASTA file header. USAGE: `python3 cleanFasta.py FASTAFILE`|
 |README.txt       |README file in text format                                                               |
 
@@ -31,12 +31,12 @@ The pre-processing script generates several files at different steps of processi
 
 | File Extensions               |  Description                                              |
 |:------------------------------|:----------------------------------------------------------|
-|*trimmed_fastqc.html           | FASTQC report                                             |
-|*chopped.trimmed.processed.txt | TAG COUNT file after trimming and chopping                |
-|*trimmed.fastq                 | Trimmed file                                              |
-|*chopped.trimmed.fastq         | Chopped and Trimmed file                                  |
-|*.ZIP  | Contains aforementioned FASTQC results                                            |
-|*.PNG                          | Generate images if settings are configured in "prepro.set"|
+|*trimmed_fastqc.html           | FASTQC report generated after trimming of sequencing adapters|
+|*trimmed.fastq                 | FASTQ file generated after trimming of sequencing adapters|
+|*chopped.trimmed.fastq         | Final trimmed and cropped output in FASTQ format          |
+|*chopped.trimmed.processed.txt | Final trimmed and cropped output file in tag-count format |
+|*.ZIP  | Contains aforementioned Contains aforementioned FASTQC results in zipped format, ideal for online sharing|
+|*.PNG                          | Charts displaying library-specific distribution of sRNA abundances and counts for both mapped and unmapped reads|
 
 ### Install prerequisites  
 A working knowledge of Linux is expected to install these packages from command-line. If you have no Linux experience, then take help 
@@ -110,7 +110,7 @@ from IT department or Linux Administrator.
 ### Examples
 See below *prepro.set* file with options for:
 
-1. Preprocessing paired-end sequencing libraries
+**1**. Preprocessing paired-end sequencing libraries using the bundled adpaters:
 
             @libs               = SRR501912,SRR501913   <FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
             
@@ -139,7 +139,7 @@ See below *prepro.set* file with options for:
             @Trimmomatic_PATH   = ~/Trimmomatic/trimmomatic-0.33.jar           <provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
 
 
-2.  Preprocess libraries from paired-end seqeincing + graphs [We are not using default adapters, so we input adapter.fa].
+**2**.  Preprocess libraries from paired-end seqeincing + graphs. In this example we are not using default (bundled) adapters instead we provide an 'adapter.fa' file and turn on the '@adapterSelection' setting by setting its value to 1:
 
             @libs               = HEN1-1,HEN1-8         <FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
             
