@@ -108,7 +108,7 @@ from IT department or Linux Administrator.
     e.g., `fastq-dump -A SRR501913 --split-files`    
 
 ### Examples
-See below *prepro.set* file with options for:
+Here we provide two examples on how the *prepro.set* file can be tweaked for study-specific processing.
 
 **1**. Preprocessing paired-end sequencing libraries using the bundled adpaters:
 
