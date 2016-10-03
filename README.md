@@ -27,8 +27,7 @@ Python-based FASTQ pre-processing script to produce the “tag count” formatte
 8. Finally, run the pre-processing script using command: `python3 prepro.py`
 
 ### Output 
-Script genrates several output files corresponding to different several pre-processing. These files are 
-identified based on their extensions.Below is the list of extensions and files:
+The pre-processing script generates several files at different steps of processing workflow. These files are identified on basis of their extensions. Below is the list of extensions for all output files along with their descriptions:
 
 | File Extensions               |  Description                                              |
 |:------------------------------|:----------------------------------------------------------|
@@ -40,8 +39,8 @@ identified based on their extensions.Below is the list of extensions and files:
 |*.PNG                          | Generate images if settings are configured in "prepro.set"|
 
 ### Install prerequisites  
-Some Linux knowledge is required to install packages from commad-line. If you have no Linux experience, then take help 
-from IT department or Linux Administartor.   
+A working knowledge of Linux is expected to install these packages from command-line. If you have no Linux experience, then take help 
+from IT department or Linux Administrator.   
 
 1. INSTALL **Python3** [Ignore this step you have Python v3]   
     Follow instructions from https://www.python.org/downloads/    
@@ -113,65 +112,66 @@ See below *prepro.set* file with options for:
 
 1. Preprocessing paired-end sequencing libraries
 
-            @libs = SRR501912,SRR501913             <FASTQ file names without extensions separated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+            @libs               = SRR501912,SRR501913   <FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
             
             <Required Steps, value in string>
-            @genoFile=                              <Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
+            @genoFile=                                  <Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
             
-            <Optional Steps, value in boolean>
-            @QCheckStep = 1                         <Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
-            @preProGraphsStep = 0                   <Default: 0, 1 Generates before-chopping graphs and used only if genoFile is provided by user.>
+            <Optional Steps, value in boolean i.e. 0 or 1>
+            @QCheckStep         = 1                     <Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
+            @preProGraphsStep   = 0                     <Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
             
             <Required Steps, value in boolean>
-            @seqType = 1                            < 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
-            @trimLibsStep = 1                       <Trim FASTQ file>
-            @chopLibsStep = 1                       <Chop file>
-            @adapterSelection = 0                   < Default: 0 uses Trimmomatic files, 1 user provided FASTA file "adapter.fa">    
-            @fastQ2CountStep = 1                    <Converts chopped to tag count>
-            @mapperStep = 0                         < Default: 0, 1 Maps final chopped files and generates graphs and used only if genoFile is provided by user. >
-            @summaryFileStep = 1                    <Prepares a summary file for the library>
-            @cleanupStep = 0                        <Final cleanup>
-            @maxLen = 21                            <Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping >
-            @minLen = 20                            <Min length of tag allowed>
-            @unpairDel = 1                          <[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
+            @seqType            = 1                     <0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
+            @trimLibsStep       = 1                     <Default and mandatory: 1 Trim FASTQ file>
+            @chopLibsStep       = 1                     <Default and mandatory: 1 Crop lomg reads to maxLen specified below>
+            @adapterSelection   = 0                     <Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>    
+            @fastQ2CountStep    = 1                     <Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
+            @mapperStep         = 0                     <Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
+            @summaryFileStep    = 1                     <Default: 1 | Prepares a summary file for the library>
+            @cleanupStep        = 0                     <Default: 0 | Deletes all output files except the processed tag-count output>
+            @maxLen             = 34                    <Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
+            @minLen             = 20                    <Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
+            @unpairDel          = 1                     <[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
             
             <Required PATH for TOOLs>
-            @adapterFile=                           < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
-            @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar           < provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar  >
+            @adapterFile        =                       <Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
+            @Trimmomatic_PATH   = ~/Trimmomatic/trimmomatic-0.33.jar           <provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
 
 
 2.  Preprocess libraries from paired-end seqeincing + graphs [We are not using default adapters, so we input adapter.fa].
 
-            @libs = HEN1-1,HEN1-8                   <FASTQ file names without extensions seperated by ','. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+            @libs               = HEN1-1,HEN1-8         <FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
             
             <Required Steps, value in string>
-            @genoFile= ath_TAIR10_genome.fa         <Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
+            @genoFile           = ath_TAIR10_genome.fa  <Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
             
             <Optional Steps, value in boolean>
-            @QCheckStep = 1                         <Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
-            @preProGraphsStep = 1                   <Default: 0, 1 Generates before-chopping graphs and used only if genoFile is provided by user.>
+            @QCheckStep         = 1                     <Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
+            @preProGraphsStep   = 1                     <Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
             
             <Required Steps, value in boolean>
-            @seqType = 0                            < 0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
-            @trimLibsStep = 1                       <Trim FASTQ file>
-            @chopLibsStep = 1                       <Chop file>
-            @adapterSelection = 1                   < Default: 0 uses Trimmomatic files, 1 user provided FASTA file "adapter.fa">
-            @fastQ2CountStep = 1                    <Converts chopped to tag count>
-            @mapperStep = 1                         < Default: 0, 1 Maps final chopped files and generates graphs and used only if genoFile is provided by user. >
-            @summaryFileStep = 1                    <Prepares a summary file for the library>
-            @cleanupStep = 0                        <Final cleanup>
-            @maxLen = 21                            <Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping >
-            @minLen = 20                            <Min length of tag allowed>
-            @unpairDel = 1                          <[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
+            @seqType            = 0                     <0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
+            @trimLibsStep       = 1                     <Default and mandatory: 1 Trim FASTQ file>
+            @chopLibsStep       = 1                     <Default and mandatory: 1 Crop lomg reads to maxLen specified below>
+            @adapterSelection   = 1                     <Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>
+            
+            @fastQ2CountStep    = 1                     <Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
+            @mapperStep         = 1                     <Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
+            @summaryFileStep    = 1                     <Default: 1 | Prepares a summary file for the library>
+            @cleanupStep        = 0                     <Default: 0 | Deletes all output files except the processed tag-count output>
+            @maxLen             = 24                    <Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
+            @minLen             = 20                    <Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
+            @unpairDel          = 1                     <[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
+            
             
             <Required PATH for TOOLs>
-            @adapterFile= adapter.fa                < Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
-            @Trimmomatic_PATH= /home/Trimmomatic/trimmomatic-0.33.jar               < provide a path to the .jar file. For ex
+            @adapterFile        = adapter.fa            <Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
+            @Trimmomatic_PATH   = /home/Trimmomatic/trimmomatic-0.33.jar               <provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
 
 ### Contact
 Atul Kakrana: kakrana@udel.edu  
 Parth Patel : pupatel@dbi.udel.edu  
 
 ## Publication
-Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452 [Read at PubMed](http://www.ncbi.nlm.nih.gov/pubmed/26454275)
-
+Patel P, Ramachandruni SD, Kakrana A, Nakano M, Meyers BC. 2016. miTRATA: a web-based tool for microRNA Truncation and Tailing Analysis. Bioinforma Oxf Engl 32: 450–452 | [Read at PubMed](http://www.ncbi.nlm.nih.gov/pubmed/26454275)
