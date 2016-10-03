@@ -1,36 +1,36 @@
 <<<Settings file for preprocessing script>>>
 
-@libs = HEN1-1 					<FASTQ file names without extensions seperated by ',' For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+@libs = HEN1-1 				<FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
 
 <<<Required Steps, value in string>>>
-@genoFile= Genome.fa 			<Default: leave blank (No file required), 'genome.fa' is provided to map final chopped files and generate graphs>
+@genoFile= Genome.fa 			<Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
 
 <<<Optional Steps, value in boolean>>>
 
-@QCheckStep 		= 1 		<Default: 0, Performs preliminary QC of RAW FASTQ file and generate charts>
-@preProGraphsStep 	= 0 		<Default: 0, 1 Generates before-chopping graphs and used only if genoFile is provided by user>
+@QCheckStep 		= 1 			<Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
+@preProGraphsStep 	= 0 			<Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
 
 
-<<<Required Steps, value in boolean>>>
-@trimLibsStep 		= 1 		<Trim FASTQ file>
-@chopLibsStep 		= 1 		<Chop file>
-@adapterSelection 	= 0  		< Default: 0 uses Trimmomatic files, 1 user provided FASTA file "adapter.fa">
-@fastQ2CountStep 	= 1 		<Converts chopped to tag count>
-@mapperStep 		= 0 		<Default: 0, 1 Maps final chopped files and generates graphs and used only if genoFile is provided by user>
-@summaryFileStep 	= 1 		<Prepares a summary file for the library>
-@cleanupStep	 	= 0 		<Final cleanup>
+<<<Required Steps, value in boolean>>>               
+@trimLibsStep 		= 1 			<Default and mandatory: 1 Trim FASTQ file>
+@chopLibsStep 		= 1 			<Default and mandatory: 1 Crop lomg reads to maxLen specified below>
+@adapterSelection 	= 0  			<Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>
+@fastQ2CountStep 	= 1 			<Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
+@mapperStep 		= 0 			<Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
+@summaryFileStep 	= 1 			<Default: 1 | Prepares a summary file for the library>
+@cleanupStep	 	= 0 			<Default: 0 | Deletes all output files except the processed tag-count output>
 
 
 <<<Advanced settings>>>
-@maxLen 			= 30 		<Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping. Change based on your needs>
-@minLen 			= 18 		<Min length of tag allowed, Change based on your needs>
-@seqType 			= 0 		<0: Single End; 1:Paired end (requires splitted reads - see fastq dump --split-reads for lib/or custom script)>
-@unpairDel 			= 1 		<[Only for paired end analysis] 0: Retain unpaired read files after trimming 1: Delete these files>
+@maxLen 			= 34 		<Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
+@minLen 			= 18 		<Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
+@seqType 			= 0 			<0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
+@unpairDel 		= 0 			<[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
 
 
 <<<Required PATH for TOOLS>>>
-@adapterFile		=  			<Default: leave blank (No file required), adapter.fa is provided Only used if the adapterSelection is set to 1>
-@Trimmomatic_PATH	=   		<provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
+@adapterFile		=  			<Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
+@Trimmomatic_PATH	=   			<provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
 
 
 
