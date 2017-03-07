@@ -1,6 +1,7 @@
 ### Synopsis
 **version**: v1.0  
-**updated**: 09/16/2015  
+**updated**: 09/16/2016    
+**Citation**: [Mathioni, S.M., Kakrana, A., and Meyers, B.C. 2017. Characterization of plant small RNAs by next generation sequencing. Curr. Protoc. Plant Biol. 2:39-63. doi: 10.1002/cppb.20043](http://onlinelibrary.wiley.com/doi/10.1002/cppb.20043/abstract)
 
 Python-based FASTQ pre-processing script to produce the “tag count” formatted output files.The processing script performs trimming and chopping, taking the raw FASTQ file(s) (single or paired end) and a set of user-defined parameters that include adapter sequences that may vary from default Illumina adapters. The parameter file also determines whether the FASTQ processing yields a FASTQC report,and whether it generates the graphs after trimming and chop-ping (for which the genome sequence must be provided). 
 
