@@ -2,7 +2,8 @@
 #!/usr/bin/python3
 
 ## Requires fastQC, trimmomatic and tally in $PATH variable
-## Script written by atul Kakrana: kakrana@udel.edu, modified and published by: Parth Patel: pupatel@udel.edu on 09/10/2015
+## Script written by atul Kakrana: kakrana@udel.edu
+## Updated - 03/13/2017
 
 ## Run : python3 ScriptName.py
 
@@ -751,7 +752,7 @@ def writeStats(aninput):
     ''' 
     Write a lib-specific summary file
     '''
-    
+
     lib,minTagLen,maxTagLen = aninput
     print (aninput)
 
