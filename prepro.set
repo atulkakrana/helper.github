@@ -1,40 +1,57 @@
-<<<Settings file for preprocessing script>>>
-
-@libs = HEN1-1 				<FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+<<<Settings file for preprocessing Illumina libraries>>>
 
 <<<Required Steps, value in string>>>
-@genoFile= Genome.fa 			<Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
+@libs 				= SRR1746866,SRR1746867,SRR1746868
+@genoFile 			= Drosophila_melanogaster_BDGP6_2LR_3LR_4_X_Y.mod.clean.fa
+
 
 <<<Optional Steps, value in boolean>>>
-
-@QCheckStep 		= 1 			<Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
-@preProGraphsStep 	= 0 			<Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
+@QCheckStep 		= 0
+@preProGraphsStep 	= 1
 
 
 <<<Required Steps, value in boolean>>>               
-@trimLibsStep 		= 1 			<Default and mandatory: 1 Trim FASTQ file>
-@chopLibsStep 		= 1 			<Default and mandatory: 1 Crop lomg reads to maxLen specified below>
-@adapterSelection 	= 0  			<Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>
-@fastQ2CountStep 	= 1 			<Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
-@mapperStep 		= 0 			<Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
-@summaryFileStep 	= 1 			<Default: 1 | Prepares a summary file for the library>
-@cleanupStep	 	= 0 			<Default: 0 | Deletes all output files except the processed tag-count output>
+@trimLibsStep 		= 1
+@chopLibsStep 		= 1
+@adapterSelection 	= 0
+@fastQ2CountStep 	= 1	
+@summaryFileStep 	= 1	
+@cleanupStep	 	= 1
 
 
 <<<Advanced settings>>>
-@maxLen 			= 34 		<Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
-@minLen 			= 18 		<Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
-@seqType 			= 0 			<0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
-@unpairDel 		= 0 			<[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
+@maxLen 			= 34 		
+@minLen 			= 18 		
+@seqType 			= 0
+@unpairDel 			= 0
 
 
 <<<Required PATH for TOOLS>>>
-@adapterFile		=  			<Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
-@Trimmomatic_PATH	=   			<provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
+@adapterFile		= 
+@Trimmomatic_PATH	=  /home/kakrana/tools/Trimmomatic-0.32/trimmomatic-0.32.jar
 
+<<<Settings Help>>>
+<@libs 				-FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
+<@genoFile			-Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
+<@QCheckStep		-Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
+<@preProGraphsStep	-Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
+<@trimLibsStep		-Default and mandatory: 1 Trim FASTQ file>
+<@chopLibsStep		-Default and mandatory: 1 Crop lomg reads to maxLen specified below>
+<@adapterSelection	-Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>
+<@fastQ2CountStep	-Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
+<@mapperStep		-Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
+<@summaryFileStep	-Default: 1 | Prepares a summary file for the library>
+<@cleanupStep		-Default: 0 | Deletes all output files except the processed tag-count output>
+<@maxLen			-Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
+<@minLen			-Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
+<@seqType			-0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
+<@unpairDel			-[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
+<@adapterFile		-Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
+<@Trimmomatic_PATH	-provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
 
 
 <END>
 <Script for pre-processing the RAW fastQ file>
-<v.2>
-<Author: kakrana@gmail.com> <Modified by: pupatel@udel.edu on 09/10/2015>
+<v3>
+<updated: 03/13/17>
+<Author	: kakrana@gmail.com>

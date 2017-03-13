@@ -20,13 +20,11 @@ import matplotlib.font_manager as font_manager
 
 ## ADVANCED SETTINGS #######################
 
-numProc = 0                             ## [developer]  Coarse grain PP [0: Mazimize parallel processing | [1-64]: Number of Cores]
-nthread = 10                            ## [developer]  Fine grain PP
-maxReadLen = 1000                       ## [developer]  Max allowed unchopped read length for graph generation
+numProc     = 0                             ## [developer]  Coarse grain PP [0: Mazimize parallel processing | [1-64]: Number of Cores]
+nthread     = 10                            ## [developer]  Fine grain PP
+maxReadLen  = 1000                          ## [developer]  Max allowed unchopped read length for graph generation
 
 ## FUNCTIONS ##################################
-
-## Output Global settings
 
 def checkTools():
     '''Checks for required componenets on user system'''
@@ -35,7 +33,7 @@ def checkTools():
 
     isFastqc = shutil.which("fastqc")
     if isFastqc:
-        print("Found:fastqc")
+        print("Found                        :fastqc")
         pass
     else:
         print("Please install 'fastqc' before using the tool")
@@ -44,14 +42,12 @@ def checkTools():
 
     isTally = shutil.which("tally")
     if isTally:
-        print("Found:Tally")
+        print("Found                        :Tally")
         pass
     else:
         print("Please install 'Tally' before using the tool")
         print("See README for how to INSTALL")
         sys.exit()
-
-
 
 def readSet():
     print ("\n######## User Settings #############")
@@ -71,94 +67,94 @@ def readSet():
                 if param.strip() == '@libs':
                     global libs
                     libs = list(map(str,value.strip().split(',')))
-                    print('User Input Libs:',libs)
+                    print('User Input Libs              :',libs)
 
                 elif param.strip() == '@genoFile':
                     global genoFile
                     genoFile = str(value.strip())
-                    print('User Input genoFile:',genoFile)
+                    print('User Input genoFile          :',genoFile)
 
                 elif param.strip() == '@Trimmomatic_PATH':
                     global Trimmomatic_PATH
                     Trimmomatic_PATH = str(value.strip())
-                    print('User Input Trimmomatic_PATH:',Trimmomatic_PATH)
+                    print('User Input Trimmomatic_PATH  :',Trimmomatic_PATH)
                 
                 elif param.strip() == '@QCheckStep':
                     global QCheckStep
                     QCheckStep = int(value.strip())
-                    print('User Input QCheckStep:',QCheckStep)
+                    print('User Input QCheckStep        :',QCheckStep)
                 
                 elif param.strip() == '@preProGraphsStep':
                     global preProGraphsStep
                     preProGraphsStep = int(value.strip())
-                    print('User Input preProGraphsStep:',preProGraphsStep)
+                    print('User Input preProGraphsStep  :',preProGraphsStep)
                 
                 elif param.strip() == '@trimLibsStep':
                     global trimLibsStep
                     trimLibsStep = int(value.strip())
-                    print('User Input trimLibsStep:',trimLibsStep)
+                    print('User Input trimLibsStep      :',trimLibsStep)
                 
                 elif param.strip() == '@chopLibsStep':
                     global chopLibsStep
                     chopLibsStep = int(value.strip())
-                    print('User Input chopLibsStep:',chopLibsStep)
+                    print('User Input chopLibsStep      :',chopLibsStep)
                 
                 elif param.strip() == '@fastQ2CountStep':
                     global fastQ2CountStep
                     fastQ2CountStep = int(value.strip())
-                    print('User Input fastQ2CountStep:',fastQ2CountStep)
+                    print('User Input fastQ2CountStep   :',fastQ2CountStep)
                 
                 elif param.strip() == '@mapperStep':
                     global mapperStep
                     mapperStep = int(value.strip())
-                    print('User Input mapperStep:',mapperStep)
+                    print('User Input mapperStep        :',mapperStep)
 
                 elif param.strip() == '@summaryFileStep':
                     global summaryFileStep
                     summaryFileStep = int(value.strip())
-                    print('User Input summaryFileStep:',summaryFileStep)
+                    print('User Input summaryFileStep   :',summaryFileStep)
                 
                 elif param.strip() == '@cleanupStep':
                     global cleanupStep
                     cleanupStep = int(value.strip())
-                    print('User Input cleanupStep:',cleanupStep)
+                    print('User Input cleanupStep       :',cleanupStep)
 
                 elif param.strip() == '@seqType':
                     global seqType
                     seqType = int(value.strip())
-                    print('User Input seqType:',seqType)
+                    print('User Input seqType           :',seqType)
 
                 elif param.strip() == '@maxLen':
                     global maxLen
                     maxLen = int(value.strip())
-                    print('User Input maxLen:',maxLen)
+                    print('User Input maxLen            :',maxLen)
 
                 elif param.strip() == '@minLen':
                     global minLen
                     minLen = int(value.strip())
-                    print('User Input minLen:',minLen)
+                    print('User Input minLen            :',minLen)
 
                 elif param.strip() == '@unpairDel':
                     global unpairDel
                     unpairDel = int(value.strip())
-                    print('User Input unpairDel:',unpairDel)
+                    print('User Input unpairDel         :',unpairDel)
 
                 elif param.strip() == '@adapterSelection':
                     global adapterSelection
                     adapterSelection = int(value.strip())
-                    print('User Input adapterSelection:',adapterSelection)  
+                    print('User Input adapterSelection  :',adapterSelection)  
 
                 elif param.strip() == '@adapterFile':
                     global adapterFile
                     TempaadapterFile = str(value.strip())
-                    print('User Input adapterFile:',TempaadapterFile)              
+                    print('User Input adapterFile       :',TempaadapterFile)              
                 
             else:
                 #print("Missed line:",line)
                 pass
 
     if Trimmomatic_PATH:
-        print("Found:Trimmomatic")
+        print("Found                        :Trimmomatic")
         pass
     else:
         print("Please install 'Trimmomatic' before using the tool")
@@ -173,26 +169,27 @@ def readSet():
         else:
             adapterFile= "TruSeq-PE.fa" #use paired end Trimmomatic adapter File
 
-    if len(genoFile) !=0 and mapperStep==0 and preProGraphsStep==0:
+    if len(genoFile) !=0 and preProGraphsStep==0:
         print (genoFile)
         print ("Error:  You provided genome file. Set mapperStep and preProGraphsStep to 1. Please Read the mapperStep in settings file")
         sys.exit()
-    elif len(genoFile)==0 and mapperStep==1 and preProGraphsStep==1 :
-        print ("Error:  You have not provided genome file. Either set mapperStep and preProGraphsStep to 0 or provide genome file.")
+    elif len(genoFile)==0 and preProGraphsStep==1 :
+        print("Error:  You have not provided genome file or path is incorrect")
+        print("Either set mapperStep and preProGraphsStep to 0 or provide a genome file")
         sys.exit()
     else:
         pass
-
-
-
 
 
     print('####################################')
     
     return libs
 
-## Output: "libName_fastqc" folder
 def QCheck(aninput):
+
+    '''
+    Output: "libName_fastqc" folder
+    '''
     print ('\n** Executing QCheck **')
     print(aninput)
     lib,nthread,infile = aninput
@@ -203,12 +200,14 @@ def QCheck(aninput):
 
     return None
 
- ## Output: "genoIndex"
-
 def indexBuilder(genoFile):
+
+    '''
+    Output: "genoIndex"
+    '''
     print ("\n**Deleting old index 'folder' !!!!!!!!!!!***\n")
-    print('If its a mistake cancel now by pressing ctrl+D and continue from index step by turning off earlier steps- You have 30 seconds')
-    time.sleep(30)
+    print('If its a mistake cancel now by pressing ctrl+D and continue from index step by turning off earlier steps- You have 5 seconds')
+    time.sleep(5)
 
     shutil.rmtree('./index', ignore_errors=True)
 
@@ -218,8 +217,11 @@ def indexBuilder(genoFile):
     retcode = subprocess.call(["bowtie-build", genoFile, genoIndex])
     return genoIndex
 
-## Output: "libName.trimmed.fastq"
 def trimLibs(aninput):
+
+    '''
+    Output: "libName.trimmed.fastq"
+    '''
     print(aninput)
     lib,ext,nthread,infile,adp_5p,adp_3p,minTagLen = aninput
     print('\n****Trimming %s library with min length %s****' % (lib,minTagLen))
@@ -232,8 +234,8 @@ def trimLibs(aninput):
     ## Single End ###################
     if seqType == 0:
         trimmedFile = '%s.trimmed.%s' % (lib,ext) ## Output
-        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
-        print (["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
+        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:10", "MINLEN:%s" % (minTagLen)])
+        print (["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:10", "MINLEN:%s" % (minTagLen)])
         if retcode == 0:## The bowtie mapping exit with status 0, all is well
                 print('\n****Trimming for %s complete****' % (infile) )
         
@@ -276,10 +278,9 @@ def trimLibs(aninput):
     
     return None
 
-## Output: "libName.chopped.fastq" 
 def chopLibs(aninput):
     ''' Reverse read set of paired end lib is chopped from right end (5' in actuality) as done by using -
-    if we do chopping with trimming using PE mode it is still chopped the same way '''
+    if we do chopping with trimming using PE mode it is still chopped the same way - Output: "libName.chopped.fastq" '''
 
     print(aninput)
     lib,ext,nthread,maxTagLen = aninput
@@ -304,8 +305,10 @@ def chopLibs(aninput):
     
     return None
 
-## Output: "libName.processed.txt"
 def fastQ2Count(aninput):
+    '''
+    Output: "libName.processed.txt"
+    '''
     print(aninput)
     lib,ext,nthread = aninput
     print('\n****Converting %s.%s file to tag count****\n' % (lib,ext))
@@ -320,8 +323,11 @@ def fastQ2Count(aninput):
         print("Something wrong happened while converting to %s library tag count - Debug for reason" % (lib))
         sys.exit()
 
-## Convert tagcount to FASTA
 def tagCount2FASTA(inFile,Exprs):
+
+    '''
+    Convert tagcount to FASTA
+    '''
 
     fh_in=open(inFile, 'r')
     outFile = '%s.fa' % (inFile.rpartition('.')[0])
@@ -353,16 +359,46 @@ def tagCount2FASTA(inFile,Exprs):
 
     return outFile
 
-## Output: "libName.map"
+def indexIntegrityCheck(genoIndex):
+    '''
+    Checks the integrity of index and the extension
+    '''
+    indexFolder     = genoIndex.rpartition("/")[0]
+    # print("This is the folder from earlier run:%s" % (indexFolder))
+    if os.path.isfile("%s.1.ebwtl" % (genoIndex)): ## Check if this extension exists in folder
+        indexExt    = "ebwtl"
+        indexFiles  = [i for i in os.listdir('%s' % (indexFolder)) if i.endswith('.ebwtl')]
+        if len(indexFiles) >= 6:
+            # print("Index has all six parts")
+            indexIntegrity = True
+
+    elif os.path.isfile("%s.1.ebwt" % (genoIndex)):
+        indexExt    = "ebwt"
+        indexFiles  = [i for i in os.listdir('%s' % (indexFolder)) if i.endswith('.ebwt')]
+        if len(indexFiles) >= 6:
+            # print("Index has all six parts")
+            indexIntegrity = True
+    else:
+        print("Existing index extension couldn't be determined")
+        print("Genome index will be remade")
+        indexExt        = False
+        indexIntegrity  = False
+
+    print("Ancillary data integrity         :",indexIntegrity)
+    # print("Number of files:%s" % (len(indexFiles)))
+
+    return indexIntegrity,indexExt
+
 def mapper(rawInputs,mode):
+
+    '''
+    Map all libraries.Output: "libName.map"
+    '''
     
-    ## For all libs - One by one
+
     for aninput in rawInputs:
         print('\nInput:',(aninput))
-        lib,ext,nthread,maxTagLen = aninput
-        
-        # Resolve index path #################################
-        genoIndexPrePro = indexBuilder(genoFile)
+        lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
 
         print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
         #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
@@ -429,7 +465,6 @@ def mapper(rawInputs,mode):
     
     return None
 
-## Output:
 def sampleInfoRead(sampleInfo):
     ''' This module reads a sample info file to make a list of 
     libraries/files, replicates and groups'''
@@ -482,11 +517,14 @@ def PPBalance(module,alist):
     npool = Pool(int(nprocPP))
     npool.map(module, alist)
 
-## Collect mapped counts
 def mappedStats(aninput,mode):
-    '''Parse map file and collect statics for graph generation'''
+
+    '''
+    Parse map file and collect statics for graph generation
+    '''
+
     print(aninput)
-    lib,ext,nthread,maxTagLen = aninput
+    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
     print('\nCollecting statistics of matched reads for Lib:%s' % (lib))
 
     inFile = '%s.%s.map' % (lib,ext.rpartition('.')[0])
@@ -511,13 +549,12 @@ def mappedStats(aninput,mode):
 
     return mappedList,mappedAbunList
 
-## Collect tag counts
 def tagCountStats(aninput,mode):
 
     '''Get stats for all the reads from tagCount file'''
 
     #print(aninput)
-    lib,ext,nthread,maxTagLen = aninput
+    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
     print('\nCollecting statistics of total reads for Lib:%s' % (lib))
 
     inFile = '%s.%s' % (lib,ext)
@@ -545,10 +582,10 @@ def tagCountStats(aninput,mode):
     #print('Total Tags',allTagsList,'\n','Total Abundance',allAbunList)
     return allTagsList,allAbunList
 
-## Generate charts
 def charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode):
-
-     ### Graphs of pre-processed files i.e trimmed files
+    '''
+    Graphs of pre-processed files i.e trimmed files
+    '''
     if mode == 1:
 
         print ("\n**Generating graphs for trimmed files**\n")
@@ -710,6 +747,128 @@ def charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode):
 
     return None
 
+def writeStats(aninput):
+    ''' 
+    Write a lib-specific summary file
+    '''
+    
+    lib,minTagLen,maxTagLen = aninput
+    print (aninput)
+
+    ### Read the library temp files with counts and abundances before and after processing
+    # print("Reading stats from: %s_allBefore.temp" % lib)
+    tempfile = "%s_allBefore.temp" % lib
+    if os.path.isfile(tempfile):
+        fh_before       = open("%s_allBefore.temp" % lib,'r')
+        aread           = fh_before.read().split('\n')
+        allTags,allAbun = aread
+        allTagsList,allAbunList = list(map(int,allTags.split(','))),list(map(int,allAbun.split(',')))
+    else:
+        print("@QCheckStep is turned-off so no stats will be generated for files before the pre-processing")
+        pass
+
+
+    # print("allTagsList:",allTagsList,"\nallAbunList:",allAbunList)
+    fh_after            = open("%s_allAfter.temp" % (lib),'r')
+    aread2              = fh_after.read().split('\n')
+    allTags2,allAbun2   = aread2
+    allTagsList2,allAbunList2 = list(map(int,allTags2.split(','))),list(map(int,allAbun2.split(',')))
+
+    tempfile = "%s_mappedBefore.temp" % lib
+    if os.path.isfile(tempfile):
+        fh_map_before   = open("%s_mappedBefore.temp" % (lib), 'r')
+        aread3          = fh_map_before.read().split('\n')
+        mapped,mappedAbun = aread3
+        mappedList,mappedAbunList = list(map(int,mapped.split(','))),list(map(int,mappedAbun.split(',')))
+    else:
+        print("@QCheckStep is turned-off so no stats will be generated for files before the pre-processing")
+        pass
+    
+    fh_map_after        = open("%s_mappedAfter.temp" % (lib),'r')
+    aread4              = fh_map_after.read().split('\n')
+    mapped2,mappedAbun2 = aread4
+    mappedList2,mappedAbunList2 = list(map(int,mapped2.split(','))),list(map(int,mappedAbun2.split(',')))
+
+    ### Prepare to write #############################################
+    ##################################################################
+    summFile            = "%s_chopinfo.txt" % lib
+    fh_out              = open(summFile,'w')
+    fh_out.write("Date - %s | Genome - %s\n" % (time.strftime("%d/%m/%Y"),genomeDB))
+    fh_out.write("Lib-%s\tBeforeProcessing-All\tAfterProcessing-All\tBeforeProcessing-Mapped\tAfterProcessing-Mapped\n" % (lib))
+
+    # print("allTagsList length:",len(allTagsList),"\nallAbunList length:",len(allAbunList))
+    indexList           = [i for i,x in enumerate(allTagsList) if x != 0]
+    # print ('indexList:',indexList)
+    minLen              = min(indexList)
+    maxLen              = max(indexList)
+
+    indexList2          = [i for i,x in enumerate(allAbunList) if x != 0]
+    # print ('indexList2:',indexList)
+    minLenAbun          = min(indexList2)
+    maxLenAbun          = max(indexList2)
+    # print("Allowed min len:%s | Allowed max len:%s" % (minTagLen,maxTagLen))
+    # print("allTags min len:%s | allTags max len = %s | allAbun max len:%s | allAbun max len:%s\n" % (minLen,maxLen,minLenAbun,maxLenAbun))
+
+    countsAllBefore     = list(allTagsList[minLen:maxLen+1])
+    countsAllAfter      = list(allTagsList2[minLen:maxLen+1])
+    abunAllBefore       = list(allAbunList[minLen:maxLen+1])
+    abunAllAfter        = list(allAbunList2[minLen:maxLen+1])
+    # print(countsAllBefore,countsAllAfter,abunAllBefore,abunAllAfter)
+
+    countsMappedBefore  = list(mappedList[minLen:maxLen+1])
+    countsMappedAfter   = list(mappedList2[minLen:maxLen+1])
+    abunMappedBefore    = list(mappedAbunList[minLen:maxLen+1])
+    abunMappedAfter     = list(mappedAbunList2[minLen:maxLen+1])
+    # print(countsMappedBefore,countsMappedAfter,abunMappedBefore,abunMappedAfter)
+
+    ## write summed tallies
+    fh_out.write("Total-Count\t%s\t%s\t%s\t%s\n" % (sum(countsAllBefore),sum(countsAllAfter),sum(countsMappedBefore),sum(countsMappedAfter)))
+    fh_out.write("Total-Abundance\t%s\t%s\t%s\t%s\n" % (sum(abunAllBefore),sum(abunAllAfter),sum(abunMappedBefore),sum(abunMappedAfter)))
+
+    ## Write counts and abudnances for every tag length
+    indBefore   = 0 ## Index to keep track of psoition in all tags (before processing list)
+    indAfter    = 0 ## Index to keep track of position in processed lists
+    for i in indexList:
+        # print("Size of tag:%s" % (i))
+        ## use size info from wishlist, to nter zero if size has been filtered out in processing
+        if i >= minTagLen and i <= maxTagLen:
+            fh_out.write("%snt-Count\t%s\t%s\t%s\t%s\n" % (i,countsAllBefore[indBefore],countsAllAfter[indAfter],countsMappedBefore[indBefore],countsMappedAfter[indAfter]))
+            fh_out.write("%snt-Abundance\t%s\t%s\t%s\t%s\n" % (i,abunAllBefore[indBefore],abunAllAfter[indAfter],abunMappedBefore[indBefore],abunMappedAfter[indAfter]))
+            indAfter += 1
+            indBefore+=1
+
+        else:
+            fh_out.write("%snt-Count\t%s\t0\t%s\t0\n" % (i,countsAllBefore[indBefore],countsMappedBefore[indBefore]))
+            fh_out.write("%snt-Abundance\t%s\t0\t%s\t0\n" % (i,abunAllBefore[indBefore],abunMappedBefore[indBefore]))
+            indBefore+=1
+
+    fh_out.close()
+
+    return None
+
+def coreReserve(cores):
+    '''
+    Decides the core pool for machine - written to make PHASworks comaptible with machines that 
+    have less than 10 cores - Will be improved in future
+    '''
+
+    if cores == 0:
+        ## Automatic assignment of cores selected
+        totalcores = int(multiprocessing.cpu_count())
+        if totalcores   == 4: ## For quad core system
+            nproc = 3
+        elif totalcores == 6: ## For hexa core system
+            nproc = 5
+        elif totalcores > 6 and totalcores <= 10: ## For octa core system and those with less than 10 cores
+            nproc = 7
+        else:
+            nproc = int(totalcores*0.85)
+    else:
+        ## Reserve user specifed cores
+        nproc = int(cores)
+
+    return nproc
+
 ############## MAIN ###########################
 def main(libs):
     
@@ -728,7 +887,6 @@ def main(libs):
         register.append((str(i),ext,str(nthread),str(filePath),None,adapterFile,minTagLen,maxTagLen)) ## file ID, ext, nthread, raw file path,None (added to maintain same structure as remote analysis register),
                                                                                                     ## adapter file, min tag len, max tag len
 
-    
     #####################################################################################
     #### 1. QC Raw files ################################################################
     rawInputs = [(i[0],i[2],i[3]) for i in register] ## Library/filename, nthread, raw file path
@@ -765,21 +923,31 @@ def main(libs):
     
     if preProGraphsStep == 1:
 
+        # Resolve index path #################################
+        genoIndex               = './index/%s' % (genoFile.rpartition('/')[-1].rpartition('.')[0])
+        indexIntegrity,indexExt = indexIntegrityCheck(genoIndex)
+        
+        if not indexIntegrity:
+            genoIndexPrePro = indexBuilder(genoFile)
+        else:
+            genoIndexPrePro = genoIndex
+            pass
+
         if seqType == 0: ## SingleEnd
-            rawInputs = [(i[0],'trimmed.fastq',i[2]) for i in register] ## ## Library/Filename, extension
+            rawInputs = [(i[0],'trimmed.fastq', i[2]) for i in register] ## ## Library/Filename, extension
         else: ## PairedEnd
-            inputsR = [(i[0],'pair_1.trimmed.fastq',i[2]) for i in register] ## ## Library/Filename, extension
-            inputsL = [(i[0],'pair_2.trimmed.fastq',i[2]) for i in register] ## ## Library/Filename, extension
+            inputsR = [(i[0],'pair_1.trimmed.fastq', i[2]) for i in register] ## ## Library/Filename, extension
+            inputsL = [(i[0],'pair_2.trimmed.fastq', i[2]) for i in register] ## ## Library/Filename, extension
             rawInputs = inputsL+inputsR
         print('\n**Converting trimmed files to tag count format for quality graphs**\n')
         PP(fastQ2Count,rawInputs)
         
 
         if seqType == 0: ## SingleEnd
-            rawInputs = [(i[0],'trimmed.processed.txt',i[2],i[7]) for i in register] ## ## Library/Filename, extension, max tag len
+            rawInputs = [(i[0],'trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
         else: ## PairedEnd
-            inputsR = [(i[0],'pair_1.trimmed.processed.txt',i[2],i[7]) for i in register] ## ## Library/Filename, extension, max tag len
-            inputsL = [(i[0],'pair_2.trimmed.processed.txt',i[2],i[7]) for i in register] ## ## Library/Filename, extension, max tag len
+            inputsR = [(i[0],'pair_1.trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
+            inputsL = [(i[0],'pair_2.trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
             rawInputs = inputsL+inputsR
         print('\n**Mapping to generate pre-chopping quality graphs graphs**\n')
             # maps = mapper(rawInputs,1)
@@ -790,10 +958,10 @@ def main(libs):
         
         ### Delete tag count, fasta files and map files to make way for real processed files
         print ("**Cleaning temp files**")
-        garbage = [file for file in os.listdir('./') if file.endswith (('.map','trimmed.processed.txt','.processed.fa'))]
-        for file in garbage:
-            print("Deleting %s" % (file))
-            os.remove(file)
+        # garbage = [file for file in os.listdir('./') if file.endswith (('.map','trimmed.processed.txt','.processed.fa'))]
+        # for file in garbage:
+        #     print("Deleting %s" % (file))
+        #     os.remove(file)
     else:
         pass
 
@@ -846,14 +1014,31 @@ def main(libs):
     else:
         pass
 
+    #### 6. Write summary file #########################################################
+    print("Writing summary files")
+
+    # if summaryFileStep == 1:
+    #     rawInputs = [(i[0],i[6],i[7]) for i in register]
+    #     ## Test - Serial
+    #     for i in rawInputs:
+    #         writeStats(i)
+        # PPBalance(writeStats,rawInputs)
+    
+    #### 7. Clean up ###################################################################
+    if cleanupStep == 1:
+        print ("**Cleaning temp files last time**")
+        garbage = [file for file in os.listdir('./') if file.endswith (('.map','trim.log','.zip','.temp','processed.temp.txt'))] ## Excluded 'chopped.trimmed.fastq' as used by RNA Runner
+        for file in garbage:
+            print("Deleting %s" % (file))
+            os.remove(file)
+    else:
+        pass
+
 ################ Execute #######################
 if __name__ == '__main__':
     
     #### Assign Cores
-    if numProc == 0:
-        nproc = int(multiprocessing.cpu_count()*0.85)
-    else:
-        nproc = int(numProc)
+    nproc = coreReserve(numProc)
     
     #### Execute modules
     checkTools()
@@ -864,4 +1049,10 @@ if __name__ == '__main__':
     sys.exit()
 
 ## v2.0 Stable
-## Contact pupatel@udel.edu , kakrana@udel.edu
+## Contact kakrana@udel.edu
+
+## v2.0 -> v2.1
+## Fixed bug (issue#1) where index was being remade for each library
+## Now index is prepared before a library and reused
+## Added index integrity checker
+## Added a summary writer
