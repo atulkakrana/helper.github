@@ -20,8 +20,8 @@
 
 
 <<<Advanced settings>>>
-@maxLen 			= 34 		
-@minLen 			= 18 		
+@minLen 			= 18
+@maxLen 			= 34	
 @seqType 			= 0
 @unpairDel 			= 0
 
@@ -34,16 +34,15 @@
 <@libs 				-FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
 <@genoFile			-Default: Leave blank (No file required), genome FASTA is required to generate graphs and summary for size-specific distribution of sRNA reads and abundances>
 <@QCheckStep		-Default: 0, Performs preliminary quality check of RAW FASTQ file and generate charts>
-<@preProGraphsStep	-Default: 0 | If set to 1 then generates graphs for untrimmed libraries, and requires genome FASTA supplied through '@genoFile' setting above>
+<@preProGraphsStep	-Default: 0 | If set to 1 then enerates size-spcefic distribution graphs from trimmed (not cropped) libraries. It requires genome FASTA supplied through '@genoFile' setting above>
 <@trimLibsStep		-Default and mandatory: 1 Trim FASTQ file>
 <@chopLibsStep		-Default and mandatory: 1 Crop lomg reads to maxLen specified below>
 <@adapterSelection	-Default: 0 uses adapter files bundled with the script | If set to 1, user provided FASTA file through '@adpater' setting below, will be used>
 <@fastQ2CountStep	-Default and mandatory: 1 Converts trimmed and cropped to tag-count format>
-<@mapperStep		-Default: 0 | If set to 1, script maps final processed files to genome and generates size-spcefic distribution graphs, this requires genome FASTA supplied through '@genoFile' setting above>
 <@summaryFileStep	-Default: 1 | Prepares a summary file for the library>
-<@cleanupStep		-Default: 0 | Deletes all output files except the processed tag-count output>
-<@maxLen			-Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
+<@cleanupStep		-Default: 1 | Deletes all output files except the processed tag-count output>
 <@minLen			-Recommended: 18 (for sRNA) and 40 (for RNA-Seq). Min length of tag allowed>
+<@maxLen			-Recommended: 34 (for sRNA) and 100 to 150 (for RNA-Seq). Max length of the tag allowed. Based on maxLen mismatches are allowed for mapping>
 <@seqType			-0: Single End; 1:Paired end (requires splitted reads - see fastq-dump --split-reads command from SRA toolkit for more details)>
 <@unpairDel			-[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
 <@adapterFile		-Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>

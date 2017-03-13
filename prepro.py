@@ -22,8 +22,8 @@ import matplotlib.font_manager as font_manager
 ## ADVANCED SETTINGS #######################
 
 numProc     = 0                             ## [developer]  Coarse grain PP [0: Mazimize parallel processing | [1-64]: Number of Cores]
-nthread     = 10                            ## [developer]  Fine grain PP
 maxReadLen  = 1000                          ## [developer]  Max allowed unchopped read length for graph generation
+# nthread     = 10                            ## [developer]  Fine grain PP - Optimization done automatically
 
 ## FUNCTIONS ##################################
 
@@ -390,78 +390,77 @@ def indexIntegrityCheck(genoIndex):
 
     return indexIntegrity,indexExt
 
-def mapper(rawInputs,mode):
+def mapper(aninput):
 
     '''
     Map all libraries.Output: "libName.map"
     '''
+    mode = 1 ## For chart type
+
+    print('\nInput:',(aninput))
+    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
+
+    print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
+    #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
     
+    ### Prepare ###########################################
+    inFile = '%s.%s' % (lib,ext)
+    print ('Processing %s for mapping to genome' % (inFile))
+    fastaFile = tagCount2FASTA(inFile,'N') ## Unique reads to FASTA format 
 
-    for aninput in rawInputs:
-        print('\nInput:',(aninput))
-        lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
+    mapFile = ('./%s.%s.map' % (lib,ext.rpartition('.')[0]))
+    print(genoIndexPrePro,inFile,fastaFile,mapFile)
+    
+    ## Map to index ##########################################
+    print ('Mapping %s processed file to genome' % (lib))
+    nthread2 = str(nthread)
 
-        print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
-        #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
-        
-        ### Prepare ###########################################
-        inFile = '%s.%s' % (lib,ext)
-        print ('Processing %s for mapping to genome' % (inFile))
-        fastaFile = tagCount2FASTA(inFile,'N') ## Unique reads to FASTA format 
+    if int(maxTagLen) > 60:
+        mismat = str(2)
+    elif int(maxTagLen) <= 60 and maxTagLen > 40:
+        mismat = str(1)
+    elif int(maxTagLen) <= 40:
+        mismat = str(0)
+    else:
+        pass
+    
+    ## Bowtie2 for future - Needs retest for speed before switching
+    #retcode = subprocess.call(["bowtie2", "-a", "--end-to-end", "-D 1", "-R 1", "-N 0", "-L 20", "-i L,0,1","--score-min L,0,0","--norc","--no-head", "--no-unal", "-t","-p",nthread,"-f", genoIndex,fastaFile,"-S",mapFile])
+    
+    ## Bowtie 1 - So as to be compatible with current indexes
+    retcode = subprocess.call(["bowtie","-f","-n",mismat,"-p", nthread2,"-t" ,genoIndexPrePro, fastaFile, mapFile])
+    
+    if retcode == 0:## The bowtie mapping exit with status 0, all is well
+        print('\nBowtie mapping for %s complete' % (inFile) )
+    else:
+        print ("There is some problem with mapping of '%s' to cDNA/genomic index - Debug for reason" % (inFile))
+        print ("Script exiting.......")
+        sys.exit()
+    
+    ### Prepare lists for plotting
+    mappedList,mappedAbunList = mappedStats(aninput,mode)
+    # print('Mapped Reads:',mappedList)
+    # print('Abundance of mapped:',mappedAbunList)
+    allTagsList,allAbunList = tagCountStats(aninput,mode)
+    # print('\nAll Reads:',allTagsList)
+    # print('Abundance of all sizes:',allAbunList)
+    
+    
+    #### Test
+    ###mappedList  =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 95075, 166790, 278740, 869086, 735439, 1515217, 7389751, 694494, 122211, 60005, 46023, 39329, 33565, 26818, 19973, 15328, 11599, 842, 648, 579, 653, 1280, 1217, 1219, 1277, 955, 856, 749, 1268, 960, 766, 708, 1983, 28293, 0, 0, 0, 0, 0, 0, 0, 0]
+    ###mappedAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 594218, 805020, 1025890, 5581017, 4444132, 4992476, 20590608, 1714861, 805331, 732898, 595526, 476446, 392119, 299055, 216764, 151625, 91236, 1205, 851, 862, 1039, 3765, 3022, 2628, 3144, 1791, 1727, 1300, 2696, 1905, 2014, 1783, 9453, 856855, 0, 0, 0, 0, 0, 0, 0, 0]
+    ###
+    ###allTagsList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 126163, 220695, 370421, 1103866, 954861, 1886032, 9010585, 1012559, 274245, 140174, 105363, 91338, 82506, 83528, 54283, 56415, 56744, 16843, 20320, 25321, 21814, 41079, 29515, 27635, 23628, 26212, 17507, 13588, 18378, 10826, 8296, 10611, 28215, 483608, 0, 0, 0, 0, 0, 0, 0, 0]
+    ###allAbunList =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 660160, 944285, 1217495, 6338895, 5015388, 5567509, 23419384, 2145615, 1029584, 858822, 709178, 672526, 658077, 416777, 348543, 248074, 173785, 21838, 23572, 28526, 26472, 77881, 53331, 41566, 36627, 33736, 22249, 17419, 24912, 13704, 10567, 14170, 42449, 1689522, 0, 0, 0, 0, 0, 0, 0, 0]
+    ###
+    ###mappedList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 95, 166, 278, 869, 735, 1515, 7389, 694, 122, 600, 460, 39, 33, 26, 86]
+    ###mappedAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 594, 805, 1025, 5581, 4444, 4992, 20590, 1714, 805, 732, 595, 476, 392, 299, 180]
+    ###
+    ###allTagsList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 126, 220, 370, 1103, 954, 1886, 9010, 1012, 274, 140, 105, 913, 825, 835, 644]
+    ###allAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 660, 944, 1217, 6338, 5015, 5567, 23419, 2145, 1029, 858, 709, 672, 658, 416, 294]
 
-        mapFile = ('./%s.%s.map' % (lib,ext.rpartition('.')[0]))
-        print(genoIndexPrePro,inFile,fastaFile,mapFile)
-        
-        ## Map to index ##########################################
-        print ('Mapping %s processed file to genome' % (lib))
-        nproc2 = str(nproc)
-
-        if int(maxTagLen) > 60:
-            mismat = str(2)
-        elif int(maxTagLen) <= 60 and maxTagLen > 40:
-            mismat = str(1)
-        elif int(maxTagLen) <= 40:
-            mismat = str(0)
-        else:
-            pass
-        
-        ## Bowtie2 for future - Needs retest for speed before switching
-        #retcode = subprocess.call(["bowtie2", "-a", "--end-to-end", "-D 1", "-R 1", "-N 0", "-L 20", "-i L,0,1","--score-min L,0,0","--norc","--no-head", "--no-unal", "-t","-p",nthread,"-f", genoIndex,fastaFile,"-S",mapFile])
-        
-        ## Bowtie 1 - So as to be compatible with current indexes
-        retcode = subprocess.call(["bowtie","-f","-n",mismat,"-p", nproc2,"-t" ,genoIndexPrePro, fastaFile, mapFile])
-        
-        if retcode == 0:## The bowtie mapping exit with status 0, all is well
-            print('\nBowtie mapping for %s complete' % (inFile) )
-        else:
-            print ("There is some problem with mapping of '%s' to cDNA/genomic index - Debug for reason" % (inFile))
-            print ("Script exiting.......")
-            sys.exit()
-        
-        ### Prepare lists for plotting
-        mappedList,mappedAbunList = mappedStats(aninput,mode)
-        print('Mapped Reads:',mappedList)
-        print('Abundance of mapped:',mappedAbunList)
-        allTagsList,allAbunList = tagCountStats(aninput,mode)
-        print('\nAll Reads:',allTagsList)
-        print('Abundance of all sizes:',allAbunList)
-        
-        
-        #### Test
-        ###mappedList  =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 95075, 166790, 278740, 869086, 735439, 1515217, 7389751, 694494, 122211, 60005, 46023, 39329, 33565, 26818, 19973, 15328, 11599, 842, 648, 579, 653, 1280, 1217, 1219, 1277, 955, 856, 749, 1268, 960, 766, 708, 1983, 28293, 0, 0, 0, 0, 0, 0, 0, 0]
-        ###mappedAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 594218, 805020, 1025890, 5581017, 4444132, 4992476, 20590608, 1714861, 805331, 732898, 595526, 476446, 392119, 299055, 216764, 151625, 91236, 1205, 851, 862, 1039, 3765, 3022, 2628, 3144, 1791, 1727, 1300, 2696, 1905, 2014, 1783, 9453, 856855, 0, 0, 0, 0, 0, 0, 0, 0]
-        ###
-        ###allTagsList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 126163, 220695, 370421, 1103866, 954861, 1886032, 9010585, 1012559, 274245, 140174, 105363, 91338, 82506, 83528, 54283, 56415, 56744, 16843, 20320, 25321, 21814, 41079, 29515, 27635, 23628, 26212, 17507, 13588, 18378, 10826, 8296, 10611, 28215, 483608, 0, 0, 0, 0, 0, 0, 0, 0]
-        ###allAbunList =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 660160, 944285, 1217495, 6338895, 5015388, 5567509, 23419384, 2145615, 1029584, 858822, 709178, 672526, 658077, 416777, 348543, 248074, 173785, 21838, 23572, 28526, 26472, 77881, 53331, 41566, 36627, 33736, 22249, 17419, 24912, 13704, 10567, 14170, 42449, 1689522, 0, 0, 0, 0, 0, 0, 0, 0]
-        ###
-        ###mappedList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 95, 166, 278, 869, 735, 1515, 7389, 694, 122, 600, 460, 39, 33, 26, 86]
-        ###mappedAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 594, 805, 1025, 5581, 4444, 4992, 20590, 1714, 805, 732, 595, 476, 392, 299, 180]
-        ###
-        ###allTagsList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 126, 220, 370, 1103, 954, 1886, 9010, 1012, 274, 140, 105, 913, 825, 835, 644]
-        ###allAbunList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 660, 944, 1217, 6338, 5015, 5567, 23419, 2145, 1029, 858, 709, 672, 658, 416, 294]
-
-        ## Plot
-        charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode) ## Mode 1 - Preprocess graphs 2: processed files graphs
+    ## Plot
+    charts(lib,ext,mappedList,mappedAbunList,allTagsList,allAbunList,mode) ## Mode 1 - Preprocess graphs 2: processed files graphs
         
     
     return None
@@ -503,6 +502,50 @@ def sampleInfoRead(sampleInfo):
     
     return libs,reps
 
+def coreReserve(cores):
+    '''
+    Decides the core pool for machine - written to make PHASworks comaptible with machines that 
+    have less than 10 cores - Will be improved in future
+    '''
+
+    if cores == 0:
+        ## Automatic assignment of cores selected
+        totalcores = int(multiprocessing.cpu_count())
+        if totalcores   == 4: ## For quad core system
+            nproc = 3
+        elif totalcores == 6: ## For hexa core system
+            nproc = 5
+        elif totalcores > 6 and totalcores <= 10: ## For octa core system and those with less than 10 cores
+            nproc = 7
+        else:
+            nproc = int(totalcores*0.85)
+    else:
+        ## Reserve user specifed cores
+        nproc = int(cores)
+
+    return nproc
+
+def optimize(nproc):
+    '''
+    dirty optimization of threads per library
+    '''
+
+    nlibs       = len(libs)
+    ninstances  = int(nproc/nlibs) ### Number of parallel instances to use
+    # print("Libs:%s | nproc:%s | ninstance:%s" % (nlibs,nproc,ninstances))
+
+    if ninstances > 3:
+        nthread = ninstances
+    else:
+        nthread = 3
+
+    print("\n#### %s cores reserved for analysis ##########" % (str(nproc)))
+    print("#### %s cores assigned to one lib ############\n" % (str(nthread)))
+    # time.sleep(1)
+
+
+    return nthread 
+
 def PP(module,alist):
     #print('***********Parallel instance of %s is being executed*********' % (module))
     start = time.time()
@@ -510,11 +553,19 @@ def PP(module,alist):
     npool.map(module, alist)
 
 def PPBalance(module,alist):
+    '''
+    Balance process according to core pool
+    '''
     #print('***********Parallel instance of %s is being executed*********' % (module))
-    start = time.time()
+    start       = time.time()
     ##PP is being used for Bowtie mappings - This will avoid overflooding of processes to server
-    nprocPP = round((nproc/int(nthread))+1) ## 1 added so as to avoid 0 processor being allocated in serial mode
-    print('\nnprocPP:%s\n' % (nprocPP))
+    nprocPP     = round((nproc/int(nthread))) 
+    if nprocPP  < 1:
+        nprocPP = 1 ## 1 here so as to avoid 0 processor being allocated in serial mode
+    else:
+        pass
+
+    print("nprocPP                          : %s" % (nprocPP))
     npool = Pool(int(nprocPP))
     npool.map(module, alist)
 
@@ -847,29 +898,6 @@ def writeStats(aninput):
 
     return None
 
-def coreReserve(cores):
-    '''
-    Decides the core pool for machine - written to make PHASworks comaptible with machines that 
-    have less than 10 cores - Will be improved in future
-    '''
-
-    if cores == 0:
-        ## Automatic assignment of cores selected
-        totalcores = int(multiprocessing.cpu_count())
-        if totalcores   == 4: ## For quad core system
-            nproc = 3
-        elif totalcores == 6: ## For hexa core system
-            nproc = 5
-        elif totalcores > 6 and totalcores <= 10: ## For octa core system and those with less than 10 cores
-            nproc = 7
-        else:
-            nproc = int(totalcores*0.85)
-    else:
-        ## Reserve user specifed cores
-        nproc = int(cores)
-
-    return nproc
-
 ############## MAIN ###########################
 def main(libs):
     
@@ -953,8 +981,12 @@ def main(libs):
         print('\n**Mapping to generate pre-chopping quality graphs graphs**\n')
             # maps = mapper(rawInputs,1)
         
-        maps = mapper(rawInputs,1)
-        #maps = mapper("4265.trimmed.fastq",1)
+        ## Serial mode - Test
+        # for i in rawInputs:
+            # mapper(i)
+
+        ## Parallel
+        PPBalance(mapper,rawInputs)
 
         
         ### Delete tag count, fasta files and map files to make way for real processed files
@@ -1038,13 +1070,14 @@ def main(libs):
 ################ Execute #######################
 if __name__ == '__main__':
     
-    #### Assign Cores
-    nproc = coreReserve(numProc)
+    checkTools()
+    libs        =readSet()
+    nproc       = coreReserve(numProc)
+    nthread     = optimize(nproc)
     
     #### Execute modules
-    checkTools()
-    libs=readSet()
     main(libs)
+    
     print("\n\n-------Script finished sucessfully - CHEERS!!!!--------\n")
     
     sys.exit()
@@ -1056,4 +1089,5 @@ if __name__ == '__main__':
 ## Fixed bug (issue#1) where index was being remade for each library
 ## Now index is prepared before a library and reused
 ## Added index integrity checker
-## Added a summary writer
+## The parallelized mapping, chart preprationw as turned OFF - Enabled two-way paralleization
+## Added optimize function
