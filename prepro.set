@@ -1,7 +1,7 @@
 <<<Settings file for preprocessing Illumina libraries>>>
 
 <<<Required Steps, value in string>>>
-@libs 				= SRR1746866,SRR1746867,SRR1746868
+@libs 				= SRR1746867,SRR1746868
 @genoFile 			= Drosophila_melanogaster_BDGP6_2LR_3LR_4_X_Y.mod.clean.fa
 
 
@@ -15,7 +15,7 @@
 @chopLibsStep 		= 1
 @adapterSelection 	= 0
 @fastQ2CountStep 	= 1	
-@summaryFileStep 	= 1	
+@summaryFileStep 	= 0	
 @cleanupStep	 	= 1
 
 
@@ -24,11 +24,14 @@
 @maxLen 			= 34	
 @seqType 			= 0
 @unpairDel 			= 0
+@headCrop			= 0 	
+@tailCrop 			= 0		
 
 
 <<<Required PATH for TOOLS>>>
 @adapterFile		= 
 @Trimmomatic_PATH	=  /home/kakrana/tools/Trimmomatic-0.32/trimmomatic-0.32.jar
+
 
 <<<Settings Help>>>
 <@libs 				-FASTQ file names separated with comma, and without the file extensions. For example, HEN1-1,HEN1-8. For paired-end data: e.g., SRR501912_1.fastq and SRR501912_2.fastq. Use core_name (SRR501912) without suffix _1.fastq or_2.fastq>
@@ -47,10 +50,13 @@
 <@unpairDel			-[Only for paired end analysis] 0: Retain unpaired read files after trimming | 1: Delete these files>
 <@adapterFile		-Default: leave blank (No file required) | User can supply their own adpater seqeunces in FASTA format, requires adapterSelection setting to 1>
 <@Trimmomatic_PATH	-provide a path to the .jar file. For example, /home/Trimmomatic/trimmomatic-0.33.jar>
+<@headCrop 			-Crops nucleotides from 5' | Default:0>
+<@tailCrop 			-Crops nucleotides from 3' | Default:0>
+
 
 
 <END>
 <Script for pre-processing the RAW fastQ file>
 <v3>
-<updated: 03/13/17>
+<updated: 03/15/17>
 <Author	: kakrana@gmail.com>

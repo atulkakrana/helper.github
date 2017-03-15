@@ -2,10 +2,12 @@
 #!/usr/bin/python3
 
 ## Requires fastQC, trimmomatic and tally in $PATH variable
-## Script written by atul Kakrana: kakrana@udel.edu
-## Updated - 03/13/2017
+## author  - atul Kakrana
+## e-mail  - kakrana@udel.edu
+## updated - 03/15/2017
+## version - v2.2
 
-## Run : python3 ScriptName.py
+## USAGE: python3 ScriptName.py
 
 ## IMPORTS #####################################
 import sys,os,re,time,timeit,csv,glob,string
@@ -139,7 +141,17 @@ def readSet():
                     global unpairDel
                     unpairDel = int(value.strip())
                     print('User Input unpairDel         :',unpairDel)
-
+                
+                elif param.strip() == '@headCrop':
+                    global headCrop
+                    headCrop = int(value.strip())
+                    #print('User Input preProGraphsStep:',cleanupStep)
+                
+                elif param.strip() == '@tailCrop':
+                    global tailCrop
+                    tailCrop = int(value.strip())
+                    #print('User Input preProGraphsStep:',cleanupStep)
+                
                 elif param.strip() == '@adapterSelection':
                     global adapterSelection
                     adapterSelection = int(value.strip())
@@ -230,12 +242,17 @@ def trimLibs(aninput):
 
     adapterFile = adp_3p ## For local analysis adp_3p is actually the adapterfile - see main
     #toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
-    toolPath = Trimmomatic_PATH
+    toolPath    = Trimmomatic_PATH
+
+    if headCrop > 0:
+        trimMinLen = minTagLen+headCrop+tailCrop
+    else:
+        trimMinLen = minTagLen
 
     ## Single End ###################
     if seqType == 0:
         trimmedFile = '%s.trimmed.%s' % (lib,ext) ## Output
-        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:10", "MINLEN:%s" % (minTagLen)])
+        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:10", "MINLEN:%s" % (trimMinLen)])
         print (["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, infile, trimmedFile, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:10", "MINLEN:%s" % (minTagLen)])
         if retcode == 0:## The bowtie mapping exit with status 0, all is well
                 print('\n****Trimming for %s complete****' % (infile) )
@@ -253,7 +270,7 @@ def trimLibs(aninput):
 
         infile1 = "%s_1.%s" % (lib,ext)
         infile2 = "%s_2.%s" % (lib,ext)
-        retcode = subprocess.call(["java", "-jar", toolPath, "PE", "-phred33", "-threads", nthread, infile1, infile2, trimmedFileP1,trimmedFileU1,trimmedFileP2,trimmedFileU2, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (minTagLen)])
+        retcode = subprocess.call(["java", "-jar", toolPath, "PE", "-phred33", "-threads", nthread, infile1, infile2, trimmedFileP1,trimmedFileU1,trimmedFileP2,trimmedFileU2, "ILLUMINACLIP:%s:2:30:10" % (adapterFile), "LEADING:3", "TRAILING:3", "SLIDINGWINDOW:4:15", "MINLEN:%s" % (trimMinLen)])
         if retcode == 0:## The bowtie mapping exit with status 0, all is well
                 print('\n****Trimming for %s complete****' % (infile) )
         
@@ -279,36 +296,9 @@ def trimLibs(aninput):
     
     return None
 
-def chopLibs(aninput):
-    ''' Reverse read set of paired end lib is chopped from right end (5' in actuality) as done by using -
-    if we do chopping with trimming using PE mode it is still chopped the same way - Output: "libName.chopped.fastq" '''
-
-    print(aninput)
-    lib,ext,nthread,maxTagLen = aninput
-    print('****Chopping %s library to length %s****' % (lib,maxTagLen))
-
-    trimmedInFile = '%s.%s' % (lib,ext)
-    choppedOutFile = '%s.chopped.%s' % (lib,ext)
-    print("\n")
-    #toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
-    toolPath = Trimmomatic_PATH
-    
-    if seqType == 0:
-        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, trimmedInFile, choppedOutFile, "CROP:%s" % (maxTagLen)])
-    else:
-        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, trimmedInFile, choppedOutFile, "CROP:%s" % (maxTagLen)])
-    
-    if retcode == 0:## The bowtie mapping exit with status 0, all is well
-            print('\n**** Chopping for %s complete****' % (trimmedInFile) )
-    else:
-        print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
-        sys.exit()
-    
-    return None
-
 def fastQ2Count(aninput):
     '''
-    Output: "libName.processed.txt"
+    de-duplicates the reads
     '''
     print(aninput)
     lib,ext,nthread = aninput
@@ -323,6 +313,78 @@ def fastQ2Count(aninput):
     else:
         print("Something wrong happened while converting to %s library tag count - Debug for reason" % (lib))
         sys.exit()
+
+    return None
+
+def chopLibs(aninput):
+    ''' Reverse read set of paired end lib is chopped from right end (5' in actuality) as done by using -
+    if we do chopping with trimming using PE mode it is still chopped the same way - Output: "libName.chopped.fastq" '''
+
+    print(aninput)
+    lib,ext,nthread,maxTagLen = aninput
+    print('****Chopping %s library to length %s****' % (lib,maxTagLen))
+
+    trimmedInFile = '%s.%s' % (lib,ext)
+    choppedOutFile = '%s.chopped.%s' % (lib,ext)
+    print("\n")
+    #toolPath = "%s/svn/Tools/Trimmomatic-0.32/trimmomatic-0.32.jar" % (os.getenv('HOME'))
+    toolPath = Trimmomatic_PATH
+
+    ## Account for extra cropping
+    if headCrop > 0 or tailCrop > 0:
+        chopLen = maxTagLen+headCrop+tailCrop
+    else:
+        chopLen = maxTagLen
+    
+    if seqType == 0:
+        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, trimmedInFile, choppedOutFile, "CROP:%s" % (chopLen)])
+    else:
+        retcode = subprocess.call(["java", "-jar", toolPath, "SE", "-phred33", "-threads", nthread, trimmedInFile, choppedOutFile, "CROP:%s" % (chopLen)])
+    
+    if retcode == 0:## The bowtie mapping exit with status 0, all is well
+            print('\n**** Chopping for %s complete****' % (trimmedInFile) )
+    else:
+        print('Something wrong happened while chopping library: %s - - Debug for reason' % (lib))
+        sys.exit()
+    
+    return None
+
+def cropEnds(aninput):
+    '''
+    Output: "libName.processed.txt"
+    '''
+
+    print(aninput)
+    lib,ext,nthread = aninput
+    if headCrop > 0 or tailCrop > 0:
+        print("** Performing additional head- and/or tail-cropping**")
+        inFile  = '%s.chopped.trimmed.processed.txt' % (lib) ## Out put will replace this file and will have same name
+        fh_in   = open(inFile,'r')
+        tagCountRead = fh_in.readlines()
+        fh_in.close()
+
+        ## Re-write the lib.processed.txt, it's cached already i.e. empty the original and re-write with cropped entries
+        cropfile        = '%s.chopped.trimmed.processed.temp.txt' % (lib)
+        fh_out          = open(cropfile,'w')
+
+        for i in tagCountRead:
+            ent = i.strip("\n")
+            atag,acount = ent.split("\t")
+            croppedtag = atag[headCrop:-tailCrop] ### If user wants to chop 2-nt from both sides then [2:-2]
+            fh_out.write("%s\t%s\n" % (croppedtag,acount))
+
+        ## Now Deduplicate again because earlier all the reads were made uniq by head and tail adpaters
+        retcode     = subprocess.call(["tally", "-i", cropfile, "-o", inFile, "--nozip", "-record-format","%R%t%X%n","-format","%R%t%X%n"])
+        if retcode == 0:## The bowtie mapping exit with status 0, all is well
+            print('\n**** Conversion to head/tail cropped tag count format for %s complete ****' % (inFile) )
+        else:
+            print("Something wrong happened while converting to %s library tag count - Debug for reason" % (lib))
+            sys.exit()
+
+        
+        fh_out.close()
+
+    return None
 
 def tagCount2FASTA(inFile,Exprs):
 
@@ -395,10 +457,10 @@ def mapper(aninput):
     '''
     Map all libraries.Output: "libName.map"
     '''
-    mode = 1 ## For chart type
+
 
     print('\nInput:',(aninput))
-    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
+    lib,ext,nthread,genoIndexPrePro,maxTagLen,mode = aninput
 
     print ('Genomic index being used for mapping: %s\n'% (genoIndexPrePro))
     #genoIndex = 'ASPARAGUS_UGA1_genome' ## Test
@@ -438,10 +500,10 @@ def mapper(aninput):
         sys.exit()
     
     ### Prepare lists for plotting
-    mappedList,mappedAbunList = mappedStats(aninput,mode)
+    mappedList,mappedAbunList = mappedStats(aninput)
     # print('Mapped Reads:',mappedList)
     # print('Abundance of mapped:',mappedAbunList)
-    allTagsList,allAbunList = tagCountStats(aninput,mode)
+    allTagsList,allAbunList = tagCountStats(aninput)
     # print('\nAll Reads:',allTagsList)
     # print('Abundance of all sizes:',allAbunList)
     
@@ -569,14 +631,14 @@ def PPBalance(module,alist):
     npool = Pool(int(nprocPP))
     npool.map(module, alist)
 
-def mappedStats(aninput,mode):
+def mappedStats(aninput):
 
     '''
     Parse map file and collect statics for graph generation
     '''
 
     print(aninput)
-    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
+    lib,ext,nthread,genoIndexPrePro,maxTagLen,mode = aninput
     print('\nCollecting statistics of matched reads for Lib:%s' % (lib))
 
     inFile = '%s.%s.map' % (lib,ext.rpartition('.')[0])
@@ -601,12 +663,12 @@ def mappedStats(aninput,mode):
 
     return mappedList,mappedAbunList
 
-def tagCountStats(aninput,mode):
+def tagCountStats(aninput):
 
     '''Get stats for all the reads from tagCount file'''
 
     #print(aninput)
-    lib,ext,nthread,genoIndexPrePro,maxTagLen = aninput
+    lib,ext,nthread,genoIndexPrePro,maxTagLen,mode = aninput
     print('\nCollecting statistics of total reads for Lib:%s' % (lib))
 
     inFile = '%s.%s' % (lib,ext)
@@ -898,6 +960,96 @@ def writeStats(aninput):
 
     return None
 
+def dedup_process(aninput):
+    '''
+    To parallelize the process
+    '''
+    print("\n#### Fn: De-duplicater #######################")
+    print(aninput)
+    lib,ext,nthread = aninput
+    print('\n****Converting %s.%s file to tag count****\n' % (lib,ext))
+    infile = '%s.%s' % (lib,ext)
+    outfile = '%s.%s.processed.txt' % (lib,ext.replace(".fastq",""))
+    print("This is outfile:%s" % (outfile))
+
+    afastaL     = dedup_fastatolist(lib)        ## Read
+    acounter    = deduplicate(afastaL )         ## De-duplicate
+    countFile   = dedup_writer(acounter,alib,outfile)   ## Write
+
+    return countFile
+
+def dedup_fastatolist(alib):
+    '''
+    New FASTA reader
+    '''
+
+    ### Sanity check
+    try:
+        f = open(alib,'r')
+    except IOError:                    
+        print ("The file, %s, does not exist" % (alib))
+        return None
+
+
+    ## Output 
+    fastaL      = [] ## List that holds FASTA tags
+
+    print("Reading FASTA file:%s" % (alib))
+    read_start  = time.time()
+    
+    acount      = 0
+    empty_count = 0
+    for line in f:
+        if line.startswith('>'):
+            seq = ''
+            pass
+        else:
+          seq = line.rstrip('\n')
+          fastaL.append(seq)
+          acount += 1
+
+    read_end    = time.time()
+    # print("-- Read time: %ss" % (str(round(read_end-read_start,2))))
+    print("Cached file: %s | Tags: %s | Empty headers: %ss" % (alib,acount,empty_count)) 
+
+    return fastaL
+                   
+def deduplicate(afastaL):
+    '''
+    De-duplicates tags using multiple threads and libraries using multiple cores
+    '''
+    dedup_start  = time.time()
+
+    # deList = [] ## Hold deduplicated tags and their abudnaces in a tuple
+
+    acounter    = collections.Counter(afastaL)
+
+    dedup_end  = time.time()
+    # print("-- dedup time: %ss" % (str(round(dedup_end-dedup_start,2))))
+
+    return acounter 
+
+def dedup_writer(acounter,alib,countFile):
+    '''
+    writes rtag count to a file
+    '''
+
+    print("Writing counts file for %s" % (alib))
+    # countFile   = "%s.fas" % alib.rpartition('.')[0]  ### Writing in de-duplicated FASTA format as required for phaster-core
+    fh_out       = open(countFile,'w')
+
+    acount      = 0
+    for i,j in acounter.items():
+        # fh_out.write("%s\t%s\n" % (i,j))
+        fh_out.write("%s\t%s\n" % (i,j))
+        acount      += 1
+
+    print("Total unique entries written for %s: %s" % (alib,acount))
+
+    fh_out.close()
+
+    return None
+
 ############## MAIN ###########################
 def main(libs):
     
@@ -970,20 +1122,21 @@ def main(libs):
             rawInputs = inputsL+inputsR
         print('\n**Converting trimmed files to tag count format for quality graphs**\n')
         PP(fastQ2Count,rawInputs)
+        # PP(dedup_process,rawInputs) ## De-duplicator can't replace FASTQ to FASTA conversion
         
-
+        mode = 1
         if seqType == 0: ## SingleEnd
-            rawInputs = [(i[0],'trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
+            rawInputs = [(i[0],'trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
         else: ## PairedEnd
-            inputsR = [(i[0],'pair_1.trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
-            inputsL = [(i[0],'pair_2.trimmed.processed.txt',i[2],genoIndexPrePro, i[7]) for i in register] ## ## Library/Filename, extension, max tag len
+            inputsR = [(i[0],'pair_1.trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
+            inputsL = [(i[0],'pair_2.trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
             rawInputs = inputsL+inputsR
         print('\n**Mapping to generate pre-chopping quality graphs graphs**\n')
             # maps = mapper(rawInputs,1)
         
         ## Serial mode - Test
         # for i in rawInputs:
-            # mapper(i)
+        #     mapper(i)
 
         ## Parallel
         PPBalance(mapper,rawInputs)
@@ -999,7 +1152,7 @@ def main(libs):
         pass
 
     ######################################################################################    
-    #### 3. Chop trimmed files ###########################################################
+    #### 4. Chop trimmed files ###########################################################
     
     if seqType == 0: ## SingleEnd
         rawInputs = [(i[0],'trimmed.fastq',i[2],i[7]) for i in register] ## ## Library/Filename, 'trimmed.fastq', max tag len
@@ -1016,7 +1169,7 @@ def main(libs):
         pass
 
     ####################################################################################    
-    #### 3B. QC chopped-trimmed files ##################################################
+    #### 5. QC chopped-trimmed files ##################################################
 
     if seqType == 0: ## SingleEnd
         rawInputs = [(i[0],i[2],'%s.chopped.trimmed.fastq' % (i[0],)) for i in register] ## ## Library/Filename,nthread, input file
@@ -1031,8 +1184,8 @@ def main(libs):
     else:
         print ('\n**Quality check of the trimmed-chopped files will be skipped as selected**\n')
 
-    
-    #### 4. Convert  chopped files to tagcount format ###################################
+    #####################################################################################
+    #### 6. Convert  chopped files to tagcount format ###################################
 
     if seqType == 0: ## SingleEnd
         rawInputs = [(i[0],'chopped.trimmed.fastq',i[2]) for i in register] ## ## Library/Filename,extension, nthread
@@ -1043,7 +1196,62 @@ def main(libs):
 
     if fastQ2CountStep == 1:
         print('\n**Converting processed files to tag count format**\n')
-        PP(fastQ2Count,rawInputs)
+        if headCrop > 0 or tailCrop > 0:
+            PP(fastQ2Count,rawInputs)
+            # PP(dedup_process,rawInputs) ## De-duplicator can't replace FASTQ to FASTA conversion
+            
+            ## Serial mode
+            # for i in rawInputs:
+            #     cropEnds(i)
+
+            ## Parallel mode
+            PP(cropEnds,rawInputs)
+        
+        else:
+            PP(fastQ2Count,rawInputs)
+            # PP(dedup_process,rawInputs) ## De-duplicator can't replace FASTQ to FASTA conversion 
+    else:
+        pass
+
+    #####################################################################################
+    #### 7. Prepare graphs of processed files ###########################################
+
+    if preProGraphsStep == 1:
+
+        # Resolve index path #################################
+        genoIndex               = './index/%s' % (genoFile.rpartition('/')[-1].rpartition('.')[0])
+        indexIntegrity,indexExt = indexIntegrityCheck(genoIndex)
+        
+        if not indexIntegrity:
+            genoIndexPrePro = indexBuilder(genoFile)
+        else:
+            genoIndexPrePro = genoIndex
+            pass
+        
+        mode = 2 ## Rename charts after processed
+        if seqType == 0: ## SingleEnd
+            rawInputs = [(i[0],'chopped.trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
+        else: ## PairedEnd
+            inputsR = [(i[0],'pair_1.chopped.trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
+            inputsL = [(i[0],'pair_2.chopped.trimmed.processed.txt',i[2],genoIndexPrePro, i[7],mode) for i in register] ## ## Library/Filename, extension, max tag len
+            rawInputs = inputsL+inputsR
+        print('\n**Mapping to generate pre-chopping quality graphs graphs**\n')
+            # maps = mapper(rawInputs,1)
+        
+        ## Serial mode - Test
+        # for i in rawInputs:
+        #     mapper(i)
+
+        ## Parallel
+        PPBalance(mapper,rawInputs)
+
+        
+        ### Delete tag count, fasta files and map files to make way for real processed files
+        print ("**Cleaning temp files**")
+        # garbage = [file for file in os.listdir('./') if file.endswith (('.map','trimmed.processed.txt','.processed.fa'))]
+        # for file in garbage:
+        #     print("Deleting %s" % (file))
+        #     os.remove(file)
     else:
         pass
 
@@ -1060,7 +1268,7 @@ def main(libs):
     #### 7. Clean up ###################################################################
     if cleanupStep == 1:
         print ("**Cleaning temp files last time**")
-        garbage = [file for file in os.listdir('./') if file.endswith (('.map','trim.log','.zip','.temp','processed.temp.txt'))] ## Excluded 'chopped.trimmed.fastq' as used by RNA Runner
+        garbage = [file for file in os.listdir('./') if file.endswith (('.map','trim.log','.zip','.temp','processed.temp.txt','.trimmed.processed.fa'))] ## Excluded 'chopped.trimmed.fastq' as used by RNA Runner
         for file in garbage:
             print("Deleting %s" % (file))
             os.remove(file)
@@ -1091,3 +1299,7 @@ if __name__ == '__main__':
 ## Added index integrity checker
 ## The parallelized mapping, chart preprationw as turned OFF - Enabled two-way paralleization
 ## Added optimize function
+
+## v2.0 -> v2.2
+## Added funtionality for head and tail crop
+## Removed "tally" dependency - Still required for crop ends
